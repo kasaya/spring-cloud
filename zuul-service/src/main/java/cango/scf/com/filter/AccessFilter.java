@@ -1,12 +1,11 @@
 package cango.scf.com.filter;
 
-import cango.scf.common.base.BaseVO;
+
 import cango.scf.com.api.service.MainService;
-
+import cango.scf.com.constants.ResultCode;
 import cango.scf.com.qo.GetTokenQO;
-
-import cango.scf.common.constant.ConstantsScf;
-import cango.scf.maincenter.vo.login.LoginVO;
+import cango.scf.com.vo.BaseVO;
+import cango.scf.com.vo.LoginVO;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;
@@ -14,10 +13,8 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.HttpServletRequestWrapper;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 import org.apache.commons.codec.binary.Base64;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
@@ -86,7 +83,7 @@ public class AccessFilter extends ZuulFilter {
             ctx.setSendZuulResponse(false);
             ctx.setResponseStatusCode(200);
             BaseVO result = new BaseVO();
-            result.setResultCode(ConstantsScf.ResultCode.AUTH_ERR);
+            result.setResultCode(ResultCode.AUTH_ERR);
             result.setResultMessage("token 不可为空");
             ctx.setResponseBody(JSONObject.toJSONString(result));// 输出最终结果
             return null;
@@ -95,7 +92,7 @@ public class AccessFilter extends ZuulFilter {
             input.setToken(userToken);
             LoginVO loginVO = mainService.getUserByToken(input);
             //判断是否失效
-            if (loginVO != null && !StringUtils.equals(loginVO.getResultCode(), ConstantsScf.ResultCode.SUCCESS)) {
+            if (loginVO != null && !StringUtils.equals(loginVO.getResultCode(), ResultCode.SUCCESS)) {
                 ctx.setSendZuulResponse(false);
                 ctx.setResponseStatusCode(200);
                 BaseVO result = new BaseVO();
