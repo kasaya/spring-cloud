@@ -60,23 +60,23 @@ public class AccessFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return true; //是否执行该过滤器，此处为true，说明需要过滤
+        //是否执行该过滤器，此处为true，说明需要过滤
+        RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
+        String url = request.getServletPath();
+        if(request.getMethod().equals(RequestMethod.OPTIONS.name())){
+            return false;
+        }
+        if (url.indexOf("/login") >= 0 || url.indexOf("/infc") >= 0) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        String url = request.getServletPath();
-
-        if(request.getMethod().equals(RequestMethod.OPTIONS.name())){
-            return null;
-        }
-
-        if (url.indexOf("/login") >= 0 || url.indexOf("/infc") >= 0) {
-            return null;
-        }
-
 
         String userToken = request.getHeader("Authorization");
         if (StringUtils.isEmpty(userToken)) {

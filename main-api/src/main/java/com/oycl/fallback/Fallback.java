@@ -4,7 +4,9 @@ package com.oycl.fallback;
 import com.oycl.service.LoginInput;
 import com.oycl.service.LoginOutput;
 import com.oycl.service.LoginService;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Fallback implements LoginService
 {
     @Override

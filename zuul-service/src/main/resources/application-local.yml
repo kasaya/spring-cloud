@@ -6,7 +6,18 @@ zuul:
     # 登录主工程
     main-api:
       path: /main/**
-      serviceId: main-api-01
+      serviceId: main-api
+  ratelimit:
+    enabled: true
+    behind-proxy: true  #代理之后
+    default-policy: #可选 - 针对所有的路由配置的策略，除非特别配置了policies
+      limit:  10
+      refresh-interval: 1
+      type:
+        - ORIGIN
+        - URL
+        - USER
+
 ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 60000
@@ -15,7 +26,7 @@ ribbon:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8660/eureka/
+      defaultZone: http://localhost:9090/eureka/
     heathcheck:
       enable: true
   instance:
