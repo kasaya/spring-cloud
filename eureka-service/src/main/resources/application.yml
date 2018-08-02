@@ -6,6 +6,10 @@ server:
 eureka:
   instance:
     hostname: localhost
+    metadata-map:
+      username: kasaya
+      password: kasaya
+
   client:
     register-with-eureka: true
     fetch-registry: true

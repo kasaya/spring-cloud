@@ -125,7 +125,7 @@ public class AccessFilter extends ZuulFilter {
 
                     JSONObject object = JSON.parseObject(body);
 
-                    if (object == null) object = new JSONObject();
+                    if(object == null) {object = new JSONObject();}
 
                     object.put("userInfo", loginVO.getUserInfo());
                     body = object.toJSONString();
