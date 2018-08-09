@@ -11,7 +11,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@ServletComponentScan(basePackages = {"com.oycl.filter"})
 public class MainApiApplication {
 
 	public static void main(String[] args) {

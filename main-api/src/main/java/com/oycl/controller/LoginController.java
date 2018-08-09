@@ -20,7 +20,7 @@ public class LoginController {
     //@CrossOrigin
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ApiOperation(value="获取用户详细信息", notes="根据url的id来获取用户详细信息")
-    public LoginOutput login(@RequestBody LoginInput input, HttpRequest request) {
+    public LoginOutput login(@RequestBody LoginInput input) {
         LoginOutput reslut = loginService.login(input);
         return reslut;
     }
