@@ -1,7 +1,7 @@
 zuul:
   sensitiveHeaders:
   #ignoredHeaders: Cookies,Set-Cookie
-  prefix: /scf
+  prefix: /kasaya
   routes:
     # 登录主工程
     main-api:
