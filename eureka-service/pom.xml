@@ -6,7 +6,10 @@
 	<groupId>com.oycl</groupId>
 	<artifactId>eureka-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <modules>
+        <module>..</module>
+    </modules>
+    <packaging>pom</packaging>
 
 	<name>eureka-service</name>
 	<description>eureka service</description>
