@@ -1,0 +1,24 @@
+#encrypt:
+##  对称加密
+#  key: oW-B6~t>Vgf0
+
+spring:
+  cloud:
+    config:
+      server:
+        encrypt:
+          enable: true
+
+#非对称加密
+
+
+#encrypt:
+#  keyStore:
+#    location: classpath:/server.jks
+#    password: cango24a
+#    alias: configkey
+#    secret: 24acango
+
+
+#生成service.jks 语句
+#keytool -genkeypair -alias configkey -keyalg RSA -dname "CN=admin,OU=CANGO,O=Organization,L=City,S=State,C=CN" -keypass cango24a -keystore server.jks -storepass cango24a

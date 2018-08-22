@@ -1,0 +1,34 @@
+server:
+  port: 8662
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          #uri: git@192.168.121.151:scf-service/scf-config-server.git
+          uri: http://xxxxx/scf-service/scf-config-server.git #ssh://git@58.246.216.36:8189/scf-service/scf-config-server.git
+          search-paths: scf-config/{application}
+          clone-on-start: true
+          force-pull: true
+          timeout: 300 #链接超时时间
+          username: configuser
+          password: configpassowrd
+#重要！！！
+#关于SSH KEY， 需要在config—service生成的 ssh key 放到 git 库当中，并且手动链接一次生成konw_host文件
+#因为spring boot 默认去读~/.ssh/know_host中的配置
+
+#注册中心
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8660/eureka/
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["refresh"]
+
