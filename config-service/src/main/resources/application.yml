@@ -1,6 +1,5 @@
-
 server:
-  port: 8662
+  port: 9093
 spring:
   application:
     name: config-server
@@ -8,13 +7,19 @@ spring:
     config:
       server:
         native:
-          searchLocations: file://C:/Project/config-service-file/config-file-lib #file://${user.home}\config-file-lib
-          #uri: ssh://git@github.com:kasaya/config-file-lib.git
-          #uri: http://xxxxx/scf-service/scf-config-server.git #ssh://git@58.246.216.36:8189/scf-service/scf-config-server.git
-          search-paths: ${name}
           clone-on-start: true
           force-pull: true
-          timeout: 300 #链接超时时间
+          timeout: 300
+          search-locations: file:///${user.home}/config-server-file/{application} #链接超时时间
+          #resource下
+ #         search-locations: classpath:/scf-config/
+          #linux绝对路径下
+ #         search-locations: file://apps/vdp/cofig
+        #  使用git的链接方式
+        #git:
+          #uri:  http://172.17.32.3/scf-service/scf-config-server.git  http模式
+          #uri:  ssh://git@58.246.216.36:8189/scf-service/scf-config-server.git ssh 模式
+          #search-paths: scf-config/{application}
           #username: configuser
           #password: configpassowrd
 #重要！！！

@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: ${spring.profiles.active}
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+      profile: ${spring.profiles.active}
+      label: master #默认master
+      #uri: http://localhost:9093 <--单机配置，高可用需要通过负载均衡。
+  application:
+    name: zuul-service
+
+server:
+  port: 8661
