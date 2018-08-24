@@ -33,13 +33,7 @@ spring:
  #         search-locations: classpath:/scf-config/
           #linux绝对路径下
  #         search-locations: file://apps/vdp/cofig
-        #  使用git的链接方式
-        #git:
-          #uri:  http://172.17.32.3/scf-service/scf-config-server.git  http模式
-          #uri:  ssh://git@58.246.216.36:8189/scf-service/scf-config-server.git ssh 模式
-          #search-paths: scf-config/{application}
-          #username: configuser
-          #password: configpassowrd
+
 #重要！！！
 #关于SSH KEY， 需要在config—service生成的 ssh key 放到 git 库当中，并且手动链接一次生成konw_host文件
 #因为spring boot 默认去读~/.ssh/know_host中的配置
@@ -48,7 +42,7 @@ eureka:
  url:  http://localhost:9090/eureka/
 
 ---
-#dev环境烧苗
+#dev环境配置
 spring:
   profiles: dev
   application:
@@ -61,6 +55,9 @@ spring:
           force-pull: true
           timeout: 300 #链接超时时间
           uri: git@github.com:kasaya/config-file-lib.git
+          #uri:  http://172.17.32.3/scf-service/scf-config-server.git  http模式
+          #username: configuser
+          #password: configpassowrd
           search-paths: '{application}'
 #注册中心地址
 eureka:
