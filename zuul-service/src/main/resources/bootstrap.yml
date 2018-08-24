@@ -1,16 +1,51 @@
+---
+#基本配置
+server:
+  port: 9095
 spring:
   profiles:
-    active: ${spring.profiles.active}
+    active: @profiles.active@
+  application:
+      name: zuul-service
+#eureka 注册中心配置
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${eureka.url}
+    heathcheck:
+      enable: true
+  instance:
+    #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
+    lease-expiration-duration-in-seconds: 30
+    #服务刷新时间配置，每隔这个时间会主动心跳一次
+    lease-renewal-interval-in-seconds: 10
+---
+#本地环境
+spring:
+  profiles: local
   cloud:
     config:
       discovery:
         enabled: true
         service-id: config-server
-      profile: ${spring.profiles.active}
+      profile: local
       label: master #默认master
       #uri: http://localhost:9093 <--单机配置，高可用需要通过负载均衡。
-  application:
-    name: zuul-service
+eureka:
+  url: http://localhost:9090/eureka/
+---
+#开发环境
+spring:
+  profiles: dev
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+      profile: dev
+      label: master #默认master
+      #uri: http://localhost:9093 <--单机配置，高可用需要通过负载均衡。
+#eureka 注册中心配置
+eureka:
+  url: http://localhost:9090/eureka/
 
-server:
-  port: 8661

@@ -1,16 +1,34 @@
+---
+spring:
+  profiles:
+    active: @profiles.active@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["refresh"]
 server:
   port: 9093
+
+#注册中心
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${eureka.url}
+---
+#本地环境启用native环境，扫描本地文件
 spring:
+  profiles: native
   application:
     name: config-server
   cloud:
     config:
       server:
-        native:
+        native: #从本地拉取环境
           clone-on-start: true
           force-pull: true
-          timeout: 300
-          search-locations: file:///${user.home}/config-server-file/{application} #链接超时时间
+          timeout: 300 #链接超时时间
+          search-locations: file:///${user.home}/config-server-file/{application}
           #resource下
  #         search-locations: classpath:/scf-config/
           #linux绝对路径下
@@ -25,17 +43,25 @@ spring:
 #重要！！！
 #关于SSH KEY， 需要在config—service生成的 ssh key 放到 git 库当中，并且手动链接一次生成konw_host文件
 #因为spring boot 默认去读~/.ssh/know_host中的配置
-
-#注册中心
+#注册中心地址
 eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:9090/eureka/
+ url:  http://localhost:9090/eureka/
 
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: ["refresh"]
-
+---
+#dev环境烧苗
+spring:
+  profiles: dev
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git: #从本地拉取环境
+          clone-on-start: true
+          force-pull: true
+          timeout: 300 #链接超时时间
+          uri: git@github.com:kasaya/config-file-lib.git
+          search-paths: '{application}'
+#注册中心地址
+eureka:
+ url:  http://localhost:9090/eureka/
