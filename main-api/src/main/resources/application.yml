@@ -4,7 +4,7 @@ eureka:
       #defaultZone: http://prod1:9090/eureka/,http://prod2:9092/eureka/
       defaultZone: http://localhost:9090/eureka/
 server:
-  port: 8010
+  port: 8091
   servlet:
     context-path: /api
 spring:

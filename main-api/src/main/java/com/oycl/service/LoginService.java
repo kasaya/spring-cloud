@@ -1,5 +1,6 @@
 package com.oycl.service;
 
+import com.netflix.ribbon.proxy.annotation.Hystrix;
 import com.oycl.fallback.Fallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.ModelAttribute;

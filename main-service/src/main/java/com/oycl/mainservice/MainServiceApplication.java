@@ -1,12 +1,10 @@
 package com.oycl.mainservice;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
-@EnableDiscoveryClient
+@SpringCloudApplication
 @ComponentScan(basePackages = {"com.oycl"})
 public class MainServiceApplication {
 
