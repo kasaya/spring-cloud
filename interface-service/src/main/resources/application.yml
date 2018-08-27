@@ -1,0 +1,15 @@
+server:
+  port: 8092
+  servlet:
+    context-path: /interface
+
+spring:
+  application:
+    name: interface-service
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9090/eureka/
+
+
+
