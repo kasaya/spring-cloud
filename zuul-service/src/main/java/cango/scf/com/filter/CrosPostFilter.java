@@ -1,6 +1,5 @@
 package cango.scf.com.filter;
 
-import cango.scf.com.api.service.MainService;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.slf4j.Logger;

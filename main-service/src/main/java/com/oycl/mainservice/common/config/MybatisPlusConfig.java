@@ -15,11 +15,8 @@ public class MybatisPlusConfig {
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer scannerConfigurer = new MapperScannerConfigurer();
-        scannerConfigurer.setBasePackage("cango.scf.com.credit.orm.mapper");
+        scannerConfigurer.setBasePackage("com.oycl.mainservice.orm.model");
         return scannerConfigurer;
     }
-
-
-
 
 }

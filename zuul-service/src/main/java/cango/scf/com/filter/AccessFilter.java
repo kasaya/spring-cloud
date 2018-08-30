@@ -1,23 +1,23 @@
 package cango.scf.com.filter;
 
 
-import cango.scf.com.api.service.MainService;
-import cango.scf.com.constants.ResultCode;
-import cango.scf.com.qo.GetTokenQO;
-import cango.scf.com.vo.BaseVO;
-import cango.scf.com.vo.LoginVO;
+import cango.scf.com.entity.UserInfoDetail;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.HttpServletRequestWrapper;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
+import com.oycl.base.BaseOutput;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -37,8 +36,6 @@ import static org.springframework.util.ReflectionUtils.rethrowRuntimeException;
 @Component
 public class AccessFilter extends ZuulFilter {
 
-    @Autowired
-    private MainService mainService;
 
     @Autowired
     private DiscoveryClient discoveryClient;
@@ -77,83 +74,66 @@ public class AccessFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest request = ctx.getRequest();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (null != authentication && null != authentication.getPrincipal()) {
+            //取得认证后的用户信息
+            UserInfoDetail userInfo = (UserInfoDetail) authentication.getPrincipal();
+            List<ServiceInstance> instanceInfoList = discoveryClient.getInstances("eureka-server");
+            if(!CollectionUtils.isEmpty(instanceInfoList)){
+                Map<String,String> metadata = instanceInfoList.get(0).getMetadata();
+                if(metadata != null){
+                    ctx.addZuulRequestHeader("Authorization", "Basic " + getBase64Credentials(metadata.get("username"), metadata.get("password")));
+                }
+            }
 
-        String userToken = request.getHeader("Authorization");
-        if (StringUtils.isEmpty(userToken)) {
+            try {
+                RequestContext context = RequestContext.getCurrentContext();
+
+
+                InputStream in = (InputStream) context.get("requestEntity");
+                if (in == null) {
+                    in = context.getRequest().getInputStream();
+                }
+                String body = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
+
+
+                JSONObject object = JSON.parseObject(body);
+
+                if(object == null) {object = new JSONObject();}
+
+                object.put("userInfo", userInfo);
+                body = object.toJSONString();
+                byte[] bytes = body.getBytes("UTF-8");
+                context.setRequest(new HttpServletRequestWrapper(RequestContext.getCurrentContext().getRequest()) {
+                    @Override
+                    public ServletInputStream getInputStream() throws IOException {
+                        return new ServletInputStreamWrapper(bytes);
+                    }
+
+                    @Override
+                    public int getContentLength() {
+                        return bytes.length;
+                    }
+
+                    @Override
+                    public long getContentLengthLong() {
+                        return bytes.length;
+                    }
+
+
+                });
+            } catch (IOException e) {
+                rethrowRuntimeException(e);
+            }
+        }else{
             ctx.setSendZuulResponse(false);
             ctx.setResponseStatusCode(200);
-            BaseVO result = new BaseVO();
-            result.setResultCode(ResultCode.AUTH_ERR);
-            result.setResultMessage("token 不可为空");
+            BaseOutput result = new BaseOutput();
+            result.setResultCode("204");
+            result.setResultMessage("没有权限重新登录");
             ctx.setResponseBody(JSONObject.toJSONString(result));// 输出最终结果
-            return null;
-        } else {
-            GetTokenQO input = new GetTokenQO();
-            input.setToken(userToken);
-            LoginVO loginVO = mainService.getUserByToken(input);
-            //判断是否失效
-            if (loginVO != null && !StringUtils.equals(loginVO.getResultCode(), ResultCode.SUCCESS)) {
-                ctx.setSendZuulResponse(false);
-                ctx.setResponseStatusCode(200);
-                BaseVO result = new BaseVO();
-                result.setResultCode(loginVO.getResultCode());
-                result.setResultMessage(loginVO.getResultMessage());
-                ctx.setResponseBody(JSONObject.toJSONString(result));// 输出最终结果
-                return null;
-            }
-
-            if (loginVO.getUserInfo() != null) {
-
-                List<ServiceInstance> instanceInfoList = discoveryClient.getInstances("eureka-server");
-                if(!CollectionUtils.isEmpty(instanceInfoList)){
-                    Map<String,String> metadata = instanceInfoList.get(0).getMetadata();
-                    if(metadata != null){
-                        ctx.addZuulRequestHeader("Authorization", "Basic " + getBase64Credentials(metadata.get("username"), metadata.get("password")));
-                    }
-                }
-
-                try {
-                    RequestContext context = RequestContext.getCurrentContext();
-
-
-                    InputStream in = (InputStream) context.get("requestEntity");
-                    if (in == null) {
-                        in = context.getRequest().getInputStream();
-                    }
-                    String body = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
-
-                    JSONObject object = JSON.parseObject(body);
-
-                    if(object == null) {object = new JSONObject();}
-
-                    object.put("userInfo", loginVO.getUserInfo());
-                    body = object.toJSONString();
-                    byte[] bytes = body.getBytes("UTF-8");
-                    context.setRequest(new HttpServletRequestWrapper(RequestContext.getCurrentContext().getRequest()) {
-                        @Override
-                        public ServletInputStream getInputStream() throws IOException {
-                            return new ServletInputStreamWrapper(bytes);
-                        }
-
-                        @Override
-                        public int getContentLength() {
-                            return bytes.length;
-                        }
-
-                        @Override
-                        public long getContentLengthLong() {
-                            return bytes.length;
-                        }
-
-
-                    });
-                } catch (IOException e) {
-                    rethrowRuntimeException(e);
-                }
-            }
-
         }
+
         return null;
     }
 

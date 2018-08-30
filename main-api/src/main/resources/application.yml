@@ -22,11 +22,16 @@ feign:
 #配置ribbon time-out
 main-service:
   ribbon:
-   ConnectTimeout: 250
-   ReadTimeout: 1000
+   MaxAutoRetriesNextServer: 1
+   MaxAutoRetries: 0
+   ConnectTimeout: 10000 #10秒
+   ReadTimeout: 10000 #10秒
 
-
-# 配置hystrix
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 hystrix:
   threadpool:
     default:
@@ -36,8 +41,8 @@ hystrix:
     default:
       execution:
         isolation:
-          strategy: Thread #隔离策略，默认是Thread, 可选Thread｜Semaphore
-          thread:
+          strategy: SEMAPHORE #隔离策略，默认是Thread, 可选Thread｜Semaphore
+          semaphore:
             timeoutInMilliseconds: 1000 #命令执行超时时间 超时时间
             interruptOnTimeout: true #发生超时是是否中断，默认true
         timeout:

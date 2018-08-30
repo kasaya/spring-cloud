@@ -79,7 +79,7 @@
 		<profile>
 			<id>local</id>
 			<properties>
-				<profiles.active>local</profiles.active>
+				<profiles.active>native</profiles.active>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>

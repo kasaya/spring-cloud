@@ -1,15 +1,16 @@
 package com.oycl.mainservice.controller;
 
-import com.oycl.mainservice.input.LoginInput;
-import com.oycl.mainservice.output.LoginOutput;
+
+import com.oycl.mainserver.input.LoginInput;
+import com.oycl.mainserver.output.LoginOutput;
 import com.oycl.mainservice.service.LoginService;
 import com.oycl.mainservice.service.impl.RetryServiceImpl;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-@Api(value="/test", tags="测试接口模块")
 @RestController
 public class LoginController {
 
@@ -20,15 +21,20 @@ public class LoginController {
     private RetryServiceImpl retryService;
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    @ApiOperation(value="获取用户详细信息", notes="根据url的id来获取用户详细信息")
-    public LoginOutput login(@RequestBody  LoginInput input) {
+    public LoginOutput login(@RequestBody LoginInput input) {
         LoginOutput reslut = loginService.login(input);
         return reslut;
     }
 
     @RequestMapping(value = "/retry",method = RequestMethod.POST)
-    @ApiOperation(value="重试请求测试", notes="根据url的id来获取用户详细信息")
     public void retry(@RequestBody  LoginInput input) {
         retryService.excute();
+    }
+
+    @RequestMapping(value = "/test",method = RequestMethod.POST)
+    public LoginOutput test(@RequestBody  LoginInput input) {
+        LoginOutput result = new LoginOutput();
+        result.setUserInfo(input.getUserInfo());
+        return result;
     }
 }

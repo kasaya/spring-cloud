@@ -2,10 +2,10 @@ package cango.scf.com.filter;
 
 
 import cango.scf.com.constants.ResultCode;
-import cango.scf.com.vo.BaseVO;
 import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import com.oycl.base.BaseOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class DownLoadFilter extends ZuulFilter {
         if (isReferer) {
             ctx.setSendZuulResponse(false);
             ctx.setResponseStatusCode(200);
-            BaseVO result = new BaseVO();
+            BaseOutput result = new BaseOutput();
             result.setResultCode(ResultCode.AUTH_ERR);
             result.setResultMessage("非法请求！");
             // 输出最终结果

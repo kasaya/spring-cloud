@@ -1,29 +1,45 @@
 package com.oycl.mainservice.service.impl;
 
-import com.oycl.mainservice.input.LoginInput;
-import com.oycl.mainservice.model.UserInfo;
-import com.oycl.mainservice.output.LoginOutput;
+import com.google.gson.Gson;
+import com.oycl.common.RoleEntity;
+import com.oycl.common.UserInfo;
+import com.oycl.mainserver.input.LoginInput;
+import com.oycl.mainserver.output.LoginOutput;
 import com.oycl.mainservice.service.LoginService;
 import org.springframework.stereotype.Service;
+import util.jwt.JwtTokenUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
-public class LoginServiceImpl implements LoginService{
+public class LoginServiceImpl implements LoginService {
+
+    private JwtTokenUtil jwtTokenUtil = JwtTokenUtil.instant();
+
     @Override
     public LoginOutput login(LoginInput input) {
-       //模拟数据库取值
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId("001");
-        userInfo.setUserName("KASAYA");
-        userInfo.setRole(Arrays.asList("001","002","003"));
+        LoginOutput result = new  LoginOutput();
+        Gson gson = new Gson();
 
-        //TODO redis 存储
-        LoginOutput result = new LoginOutput();
+        //模仿数据库/redis取值
+        UserInfo userInfo = new UserInfo();
+        userInfo.setLoginId("zzz");
+        userInfo.setName("卡萨亚");
+        userInfo.setUserId("1000001");
+        RoleEntity entity = new RoleEntity();
+        entity.setRoleId("001");
+        entity.setRoleName("系统管理员");
+        List<RoleEntity> roleEntities = new ArrayList<>();
+        roleEntities.add(entity);
+        userInfo.setRole(roleEntities);
+        // 设定用户信息
         result.setUserInfo(userInfo);
+        //生成JWTtoken
+        result.setToken(jwtTokenUtil.generateToken(gson.toJson(userInfo)));
         return result;
     }
-
 
 
 }
