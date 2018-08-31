@@ -2,6 +2,12 @@
 spring:
   profiles:
     active: @profiles.active@
+  security:
+      user:
+        name: kasaya
+        password: kasaya
+
+#endpoint
 management:
   endpoints:
     web:

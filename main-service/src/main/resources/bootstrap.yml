@@ -30,6 +30,8 @@ spring:
         service-id: config-server
       profile: local
       label: master #默认master
+      username: kasaya
+      password: kasaya
       #uri: http://localhost:9093 <--单机配置，高可用需要通过负载均衡。
 eureka:
   url: http://localhost:9090/eureka/
@@ -44,6 +46,8 @@ spring:
         service-id: config-server
       profile: dev
       label: master #默认master
+      username: kasaya
+      password: kasaya
       #uri: http://localhost:9093 <--单机配置，高可用需要通过负载均衡。
 #eureka 注册中心配置
 eureka:

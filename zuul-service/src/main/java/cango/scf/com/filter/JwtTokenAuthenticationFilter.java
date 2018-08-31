@@ -64,19 +64,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             Gson gson = new Gson();
             // 还原用户信息
             UserInfoDetail userInfo = gson.fromJson(s, UserInfoDetail.class);
-//            //模仿数据库/redis取值
-//            UserInfoDetail userInfo = new UserInfoDetail();
-//            userInfo.setLoginId("zzz");
-//            userInfo.setName("卡萨亚");
-//            userInfo.setUserId("1000001");
-//            RoleEntity entity = new RoleEntity();
-//            entity.setRoleId("001");
-//            entity.setRoleName("系统管理员");
-//            List<RoleEntity> roleEntities = new ArrayList<>();
-//            roleEntities.add(entity);
-//            userInfo.setRole(roleEntities);
 
-            //这里我为了方便，就直接返回一个用户信息，实际当中这里修改为查询数据库或者调用服务什么的来获取用户信息
             return userInfo;
         }
     }
