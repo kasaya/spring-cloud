@@ -4,13 +4,11 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/eureka-service/pom.xml" />
-        <option value="$PROJECT_DIR$/main-api/pom.xml" />
         <option value="$PROJECT_DIR$/main-service/pom.xml" />
         <option value="$PROJECT_DIR$/zuul-service/pom.xml" />
         <option value="$PROJECT_DIR$/common-util/pom.xml" />
         <option value="$PROJECT_DIR$/config-service/pom.xml" />
         <option value="$PROJECT_DIR$/server-base/pom.xml" />
-        <option value="$PROJECT_DIR$/api-base/pom.xml" />
         <option value="$PROJECT_DIR$/interface-service/pom.xml" />
         <option value="$PROJECT_DIR$/defination/pom.xml" />
       </list>
