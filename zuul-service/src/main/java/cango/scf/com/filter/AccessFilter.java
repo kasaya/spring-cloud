@@ -12,6 +12,8 @@ import com.netflix.zuul.http.HttpServletRequestWrapper;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 import com.oycl.base.BaseOutput;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -36,6 +38,7 @@ import static org.springframework.util.ReflectionUtils.rethrowRuntimeException;
 @Component
 public class AccessFilter extends ZuulFilter {
 
+    private Logger logger = LoggerFactory.getLogger(CrosPostFilter.class);
 
     @Autowired
     private DiscoveryClient discoveryClient;
@@ -62,12 +65,15 @@ public class AccessFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         String url = request.getServletPath();
+
         if(request.getMethod().equals(RequestMethod.OPTIONS.name())){
             return false;
         }
         if (url.indexOf("/login") >= 0 || url.indexOf("/infc") >= 0) {
+            setBaseAuthorization(ctx);
             return false;
         }
+
         return true;
     }
 
@@ -76,15 +82,10 @@ public class AccessFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (null != authentication && null != authentication.getPrincipal()) {
+
+            setBaseAuthorization(ctx);
             //取得认证后的用户信息
             UserInfoDetail userInfo = (UserInfoDetail) authentication.getPrincipal();
-            List<ServiceInstance> instanceInfoList = discoveryClient.getInstances("eureka-server");
-            if(!CollectionUtils.isEmpty(instanceInfoList)){
-                Map<String,String> metadata = instanceInfoList.get(0).getMetadata();
-                if(metadata != null){
-                    ctx.addZuulRequestHeader("Authorization", "Basic " + getBase64Credentials(metadata.get("username"), metadata.get("password")));
-                }
-            }
 
             try {
                 RequestContext context = RequestContext.getCurrentContext();
@@ -125,13 +126,6 @@ public class AccessFilter extends ZuulFilter {
             } catch (IOException e) {
                 rethrowRuntimeException(e);
             }
-        }else{
-            ctx.setSendZuulResponse(false);
-            ctx.setResponseStatusCode(200);
-            BaseOutput result = new BaseOutput();
-            result.setResultCode("204");
-            result.setResultMessage("没有权限重新登录");
-            ctx.setResponseBody(JSONObject.toJSONString(result));// 输出最终结果
         }
 
         return null;
@@ -143,4 +137,19 @@ public class AccessFilter extends ZuulFilter {
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
         return new String(base64CredsBytes);
     }
+
+    /**
+     * 设定httpBasic  检测头
+     * @param ctx
+     */
+    private void setBaseAuthorization(RequestContext ctx){
+        List<ServiceInstance> instanceInfoList = discoveryClient.getInstances("eureka-service");
+        if(!CollectionUtils.isEmpty(instanceInfoList)){
+            Map<String,String> metadata = instanceInfoList.get(0).getMetadata();
+            if(metadata != null){
+                ctx.addZuulRequestHeader("Authorization", "Basic " + getBase64Credentials(metadata.get("username"), metadata.get("password")));
+            }
+        }
+    }
+
 }

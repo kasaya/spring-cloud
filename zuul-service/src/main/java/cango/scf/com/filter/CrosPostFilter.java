@@ -2,21 +2,28 @@ package cango.scf.com.filter;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class CrosPostFilter extends ZuulFilter {
 
     private Logger logger = LoggerFactory.getLogger(CrosPostFilter.class);
+
+
 
     @Override
     public String filterType() {
@@ -59,6 +66,9 @@ public class CrosPostFilter extends ZuulFilter {
         ctx.setSendZuulResponse(true);
         ctx.setResponseStatusCode(200);
         logger.debug("*****************PostFilter run end*****************");
+
         return null;
     }
+
+
 }

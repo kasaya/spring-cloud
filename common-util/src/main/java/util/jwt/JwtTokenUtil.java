@@ -31,7 +31,7 @@ public class JwtTokenUtil implements Serializable {
     /**
      * 密钥
      */
-    private final String secret = "asdwasdwasdwasdwasdwasdwasdwasdwasdwasdwasdwasdwasdwasdwasdwasdw";
+    private final String secret = "BfVvTqm7eQDWcQASd0O0LAsdKOKFuzHnocmoyE9xcTwhkJ4OMxifGdmMS84ocdaK";
 
     /**
      * 从数据声明生成令牌
