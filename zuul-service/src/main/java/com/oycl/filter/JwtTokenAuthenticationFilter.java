@@ -1,9 +1,8 @@
-package cango.scf.com.filter;
+package com.oycl.filter;
 
 
-import cango.scf.com.entity.UserInfoDetail;
+import com.oycl.entity.UserInfoDetail;
 import com.google.gson.Gson;
-import com.oycl.common.RoleEntity;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,8 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

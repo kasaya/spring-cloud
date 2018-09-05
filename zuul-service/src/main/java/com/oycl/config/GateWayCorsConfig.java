@@ -1,4 +1,4 @@
-package cango.scf.com.config;
+package com.oycl.config;
 
 import org.springframework.context.annotation.Configuration;
 

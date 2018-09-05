@@ -1,4 +1,4 @@
-package cango.scf.com.constants;
+package com.oycl.constants;
 
 /**返回code*/
     public class ResultCode {

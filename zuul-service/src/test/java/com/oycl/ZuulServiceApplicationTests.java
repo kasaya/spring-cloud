@@ -1,4 +1,4 @@
-package cango.scf.com;
+package com.oycl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

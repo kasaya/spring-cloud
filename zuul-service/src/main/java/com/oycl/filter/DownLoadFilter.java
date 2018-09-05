@@ -1,7 +1,7 @@
-package cango.scf.com.filter;
+package com.oycl.filter;
 
 
-import cango.scf.com.constants.ResultCode;
+import com.oycl.constants.ResultCode;
 import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;

@@ -1,4 +1,4 @@
-package cango.scf.com.entity;
+package com.oycl.entity;
 
 import com.oycl.common.UserInfo;
 import org.springframework.security.core.GrantedAuthority;

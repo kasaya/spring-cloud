@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/server-base/pom.xml" />
         <option value="$PROJECT_DIR$/interface-service/pom.xml" />
         <option value="$PROJECT_DIR$/defination/pom.xml" />
+        <option value="$PROJECT_DIR$/authorization-service/pom.xml" />
       </list>
     </option>
   </component>
