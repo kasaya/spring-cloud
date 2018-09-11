@@ -61,7 +61,7 @@ public class AuthroizationServiceImpl implements AuthroizationService {
             result.setApiSecret(aesUtil.encryptCBC(target.getSecret()));
         } else {
             //生成APIID 与 ApiSecret
-            String apiId = CipherUtil.creatApiId("Scf");
+            String apiId = CipherUtil.creatApiId("kasaya");
 
             param.setApiId(apiId);
             param.setSecret(StringUtil.getUUID());
@@ -164,7 +164,7 @@ public class AuthroizationServiceImpl implements AuthroizationService {
                     logger.error("签名生成异常", e);
                 }
             }
-            paramBuilder.append("cangoScfAuthroization");
+            paramBuilder.append("kasayaSlayers");
         }
         return input.getSign().equals(CipherUtil.md5DigestAsHex(paramBuilder.toString()));
     }
