@@ -10,9 +10,6 @@ import java.io.Serializable;
  * <p>
  * 
  * </p>
- *
- * @author cango
- * @since 2018-09-06
  */
 public class TAuthBase implements Serializable {
 
@@ -33,22 +30,18 @@ public class TAuthBase implements Serializable {
     /**
      * 新增日期时间
      */
-    @TableField(fill = FieldFill.INSERT)
     private String createDateTime;
     /**
      * 新增人
      */
-    @TableField(fill = FieldFill.INSERT)
     private String createUser;
     /**
      * 更新日期时间
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String lastUpdateTime;
     /**
      * 更新人
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateUser;
 
 
