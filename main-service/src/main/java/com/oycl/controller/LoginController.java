@@ -9,11 +9,12 @@ import com.oycl.service.InterfaceService;
 import com.oycl.service.LoginService;
 import com.oycl.service.impl.RetryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
+@RefreshScope
 @RestController
 public class LoginController {
 
@@ -26,13 +27,17 @@ public class LoginController {
     @Autowired
     private InterfaceService interfaceService;
 
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    @Value("${user.mate}")
+    private String value;
+
+    @PostMapping(value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
     public LoginOutput login(@RequestBody LoginInput input) {
-        LoginOutput reslut = loginService.login(input);
+        LoginOutput reslut =  new LoginOutput(); //loginService.login(input);
+        reslut.setResultMessage(value);
         return reslut;
     }
 
-    @RequestMapping(value = "/retry",method = RequestMethod.POST)
+    @PostMapping(value = "/retry",produces = MediaType.APPLICATION_JSON_VALUE)
     public void retry(@RequestBody  LoginInput input) {
         retryService.excute();
     }
