@@ -1,8 +1,9 @@
 package com.oycl.output;
 
-import cango.scf.com.common.base.BaseOutput;
 
-public class RegisterOutput extends BaseOutput{
+import com.oycl.common.base.BaseOutput;
+
+public class RegisterOutput extends BaseOutput {
     /**
      * 密码
      */

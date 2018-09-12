@@ -1,8 +1,9 @@
 package com.oycl.output;
 
-import cango.scf.com.common.base.BaseOutput;
 
-public class VerifyTokenOutput extends BaseOutput{
+import com.oycl.common.base.BaseOutput;
+
+public class VerifyTokenOutput extends BaseOutput {
     /**
      * 验证结果
      */

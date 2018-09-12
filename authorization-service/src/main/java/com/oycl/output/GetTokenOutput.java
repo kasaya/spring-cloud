@@ -1,8 +1,9 @@
 package com.oycl.output;
 
-import cango.scf.com.common.base.BaseOutput;
 
-public class GetTokenOutput extends BaseOutput{
+import com.oycl.common.base.BaseOutput;
+
+public class GetTokenOutput extends BaseOutput {
     /**
      * 凭证
      */

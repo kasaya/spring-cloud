@@ -1,12 +1,13 @@
 package com.oycl.controller;
 
-import cango.scf.com.common.base.BaseOutput;
-import cango.scf.com.common.definitions.Constants;
-import cango.scf.com.common.exception.CangoAplException;
-import cango.scf.com.input.GetTokenInput;
+
+import com.oycl.common.base.BaseOutput;
+import com.oycl.common.definitions.Constants;
+import com.oycl.common.exception.CangoAplException;
+import com.oycl.input.GetTokenInput;
 import com.oycl.input.RegisterInput;
 import com.oycl.input.VerifyTokenInput;
-import cango.scf.com.output.GetTokenOutput;
+import com.oycl.output.GetTokenOutput;
 import com.oycl.output.RegisterOutput;
 import com.oycl.output.VerifyTokenOutput;
 import com.oycl.service.AuthroizationService;
