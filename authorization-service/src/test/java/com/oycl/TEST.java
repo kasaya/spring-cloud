@@ -1,6 +1,6 @@
 package com.oycl;
 
-import com.oycl.common.util.CipherUtil;
+import com.oycl.starter.common.util.CipherUtil;
 
 public class TEST {
     public static void main(String[] args) {

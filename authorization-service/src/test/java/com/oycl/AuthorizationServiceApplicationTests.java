@@ -1,6 +1,6 @@
 package com.oycl;
 
-import com.oycl.service.AuthroizationService;
+import com.oycl.starter.service.AuthroizationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
