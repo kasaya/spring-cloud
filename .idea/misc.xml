@@ -3,7 +3,6 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/eureka-service/pom.xml" />
         <option value="$PROJECT_DIR$/main-service/pom.xml" />
         <option value="$PROJECT_DIR$/zuul-service/pom.xml" />
         <option value="$PROJECT_DIR$/common-util/pom.xml" />
@@ -14,6 +13,7 @@
         <option value="$PROJECT_DIR$/authorization-service/pom.xml" />
         <option value="$PROJECT_DIR$/common-starter-autoconfig/pom.xml" />
         <option value="$PROJECT_DIR$/common-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/eureka-service/pom.xml" />
       </list>
     </option>
   </component>
