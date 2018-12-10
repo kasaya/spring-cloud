@@ -1,15 +1,17 @@
 spring:
-  profiles:
-    active: prod1
   application:
-    name: eureka
+    name: eureka-service
 server:
   port: 9090
 eureka:
   instance:
-    hostname: prod1
+    hostname: localhost
+    metadata-map:
+      username: kasaya
+      password: kasaya
+
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://prod2:9092/eureka/
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/

@@ -2,7 +2,19 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/api-base/api-parent.iml" filepath="$PROJECT_DIR$/api-base/api-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/authorization-service/authorization-service.iml" filepath="$PROJECT_DIR$/authorization-service/authorization-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-starter/common-starter.iml" filepath="$PROJECT_DIR$/common-starter/common-starter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-starter-autoconfig/common-starter-autoconfig.iml" filepath="$PROJECT_DIR$/common-starter-autoconfig/common-starter-autoconfig.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common-util/common-util.iml" filepath="$PROJECT_DIR$/common-util/common-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/config-service/config-service.iml" filepath="$PROJECT_DIR$/config-service/config-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/defination/defination.iml" filepath="$PROJECT_DIR$/defination/defination.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eureka-service/eureka-service.iml" filepath="$PROJECT_DIR$/eureka-service/eureka-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/interface-service/interface-service.iml" filepath="$PROJECT_DIR$/interface-service/interface-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main-service/main-service.iml" filepath="$PROJECT_DIR$/main-service/main-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server-base/server-base.iml" filepath="$PROJECT_DIR$/server-base/server-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/spring-cloud.iml" filepath="$PROJECT_DIR$/.idea/spring-cloud.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zuul-service/zuul-service.iml" filepath="$PROJECT_DIR$/zuul-service/zuul-service.iml" />
     </modules>
   </component>
 </project>
