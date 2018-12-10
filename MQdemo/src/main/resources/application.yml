@@ -17,8 +17,8 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: springcloud
-    password: springcloud
+    username: guest
+    password: guest
 #mq 持续时间
 tutorial:
   client:
