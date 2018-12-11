@@ -1,7 +1,7 @@
 package com.oycl.common.exception;
 
 
-import cango.scf.com.common.definitions.Constants;
+import com.oycl.common.definitions.Constants;
 
 public class CangoAplException extends Exception {
 
