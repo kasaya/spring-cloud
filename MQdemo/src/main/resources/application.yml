@@ -15,10 +15,10 @@ spring:
       connection-timeout: 30000
       connection-test-query: SELECT 1
   rabbitmq:
-    host: localhost
+    host: 10.43.22.149
     port: 5672
-    username: guest
-    password: guest
+    username: tur
+    password: tur
 #mq 持续时间
 tutorial:
   client:
