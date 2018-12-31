@@ -3,9 +3,9 @@ spring:
   profiles:
     active: @profiles.active@
   security:
-      user:
-        name: kasaya
-        password: kasaya
+    user:
+      name: kasaya
+      password: kasaya
   rabbitmq:
     host: localhost
     port: 5672
@@ -42,18 +42,18 @@ spring:
           clone-on-start: true
           force-pull: true
           timeout: 300 #链接超时时间
-          search-locations: file:///${user.home}/config-server-file/{application}
+          search-locations: file:///D:/project/config-file/{application} #/${user.home}/config-server-file/{application}
           #resource下
- #         search-locations: classpath:/scf-config/
+          #         search-locations: classpath:/scf-config/
           #linux绝对路径下
- #         search-locations: file://apps/vdp/cofig
+  #         search-locations: file://apps/vdp/cofig
 
 #重要！！！
 #关于SSH KEY， 需要在config—service生成的 ssh key 放到 git 库当中，并且手动链接一次生成konw_host文件
 #因为spring boot 默认去读~/.ssh/know_host中的配置
 #注册中心地址
 eureka:
- url:  http://localhost:9090/eureka/
+  url:  http://localhost:9090/eureka/
 
 ---
 #dev环境配置
@@ -75,4 +75,4 @@ spring:
           search-paths: '{application}'
 #注册中心地址
 eureka:
- url:  http://localhost:9090/eureka/
+  url:  http://localhost:9090/eureka/
