@@ -1,11 +1,11 @@
 package com.oycl.controller;
 
 
+import com.oycl.interfaceserver.api.InterfaceService;
 import com.oycl.interfaceserver.input.GetMcodeInput;
 import com.oycl.interfaceserver.output.GetMcodeOutPut;
 import com.oycl.mainserver.input.LoginInput;
 import com.oycl.mainserver.output.LoginOutput;
-import com.oycl.service.InterfaceService;
 import com.oycl.service.LoginService;
 import com.oycl.service.impl.RetryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

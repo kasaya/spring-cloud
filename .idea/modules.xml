@@ -3,9 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/authorization-service/authorization-service.iml" filepath="$PROJECT_DIR$/authorization-service/authorization-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/common-util/common-util.iml" filepath="$PROJECT_DIR$/common-util/common-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base-common/base-common.iml" filepath="$PROJECT_DIR$/base-common/base-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base-data/base-data.iml" filepath="$PROJECT_DIR$/base-data/base-data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base-defination/base-defination.iml" filepath="$PROJECT_DIR$/base-defination/base-defination.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base-data/base_data.iml" filepath="$PROJECT_DIR$/base-data/base_data.iml" />
       <module fileurl="file://$PROJECT_DIR$/config-service/config-service.iml" filepath="$PROJECT_DIR$/config-service/config-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/defination/defination.iml" filepath="$PROJECT_DIR$/defination/defination.iml" />
       <module fileurl="file://$PROJECT_DIR$/MQdemo/demo.iml" filepath="$PROJECT_DIR$/MQdemo/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/eureka-service/eureka-service.iml" filepath="$PROJECT_DIR$/eureka-service/eureka-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/interface-service/interface-service.iml" filepath="$PROJECT_DIR$/interface-service/interface-service.iml" />

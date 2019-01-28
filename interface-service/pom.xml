@@ -21,14 +21,20 @@
     <dependencies>
         <dependency>
             <groupId>com.oycl</groupId>
-            <artifactId>common-util</artifactId>
+            <artifactId>base-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.oycl</groupId>
-            <artifactId>defination</artifactId>
+            <artifactId>base-defination</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oycl</groupId>
+            <artifactId>base-data</artifactId>
+            <version>1.0.0-RELEASE</version>
         </dependency>
     </dependencies>
 

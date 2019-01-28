@@ -12,7 +12,7 @@ import java.util.Random;
 @Service
 public class RetryServiceImpl implements InterfaceRetryService {
 
-    //@Retryable(value= RemoteAccessException.class ,maxAttempts=2)
+    @Retryable(value= RemoteAccessException.class ,maxAttempts=2)
     @Override
     public void excute() {
         System.out.println("调用excute方法");
@@ -20,7 +20,7 @@ public class RetryServiceImpl implements InterfaceRetryService {
     }
 
     @Override
-    //@Recover
+    @Recover
     public void recover(NormalExciton e) {
 
         System.out.println("调用recover方法");

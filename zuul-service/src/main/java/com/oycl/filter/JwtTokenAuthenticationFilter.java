@@ -27,8 +27,6 @@ import java.io.IOException;
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
 
-    private JwtTokenUtil jwtTokenUtil = JwtTokenUtil.instant();
-
 
 
     @Override
@@ -38,9 +36,9 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken authentication = null;
 
         //验证token是否过期 如果过期
-        if(!jwtTokenUtil.isTokenExpired(authorization)){
+        if(!JwtTokenUtil.INSTENS.isTokenExpired(authorization)){
             //将token转换成认证信息
-            Claims claims = jwtTokenUtil.getClaimsFromToken(authorization);
+            Claims claims = JwtTokenUtil.INSTENS.getClaimsFromToken(authorization);
 
             CustomUserDetailsService customUserDetailsService = new CustomUserDetailsService();
             if (claims != null) {
