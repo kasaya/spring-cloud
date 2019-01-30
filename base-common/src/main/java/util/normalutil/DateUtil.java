@@ -19,6 +19,10 @@ import java.util.List;
  */
 public class DateUtil extends DateUtils {
 
+	private DateUtil(){
+		throw new AssertionError();
+	}
+
 	public final static String YYYY_MM_DD = "yyyy-MM-dd";
 
 	public final static String YYYYMMDD = "yyyyMMdd";

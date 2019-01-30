@@ -10,6 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtil extends StringUtils {
+
+	private StringUtil(){
+		throw new AssertionError();
+	}
 	
 	/** 随机数字 */
 	public static final String RANDOM_NUMBER = "0123456789";

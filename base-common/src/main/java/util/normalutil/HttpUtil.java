@@ -34,7 +34,15 @@ import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
 import java.util.Map;
 
+/**
+ * Http 请求工具类
+ */
 public class HttpUtil {
+
+    private HttpUtil(){
+        throw new AssertionError();
+    }
+
     static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
     private static final String HTTP = "http";
     private static final String HTTPS = "https";
@@ -48,11 +56,7 @@ public class HttpUtil {
         try {
             builder = new SSLContextBuilder();
             // 全部信任 不做身份鉴定
-            builder.loadTrustMaterial(null, new TrustStrategy() {
-                public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-                    return true;
-                }
-            });
+            builder.loadTrustMaterial(null, (TrustStrategy) (x509Certificates, s) -> true);
             sslsf = new SSLConnectionSocketFactory(builder.build(), new String[]{"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.2"}, null, NoopHostnameVerifier.INSTANCE);
             Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register(HTTP, new PlainConnectionSocketFactory())
