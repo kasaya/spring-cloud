@@ -1,4 +1,4 @@
-package exception;
+package com.oycl.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;

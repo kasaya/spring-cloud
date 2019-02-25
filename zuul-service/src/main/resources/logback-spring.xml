@@ -8,7 +8,7 @@
     <property name="LOG_NAME" value=".logs"/>
     <!--设置系统日志目录-->
 
-    <property name="APPDIR" value="zuul-service"/>
+    <property name="APPDIR" value="zuul-com.oycl.service"/>
     <!--
           说明：
           1、日志级别及文件

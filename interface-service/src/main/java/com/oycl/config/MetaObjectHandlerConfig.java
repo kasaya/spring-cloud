@@ -5,7 +5,7 @@ package com.oycl.config;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
-import util.normalutil.DateUtil;
+import com.oycl.util.normalutil.DateUtil;
 
 
 @Component

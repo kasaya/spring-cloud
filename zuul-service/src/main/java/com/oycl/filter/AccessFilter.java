@@ -140,7 +140,7 @@ public class AccessFilter extends ZuulFilter {
      * @param ctx
      */
     private void setBaseAuthorization(RequestContext ctx){
-        List<ServiceInstance> instanceInfoList = discoveryClient.getInstances("eureka-service");
+        List<ServiceInstance> instanceInfoList = discoveryClient.getInstances("eureka-com.oycl.service");
         if(!CollectionUtils.isEmpty(instanceInfoList)){
             Map<String,String> metadata = instanceInfoList.get(0).getMetadata();
             if(metadata != null){

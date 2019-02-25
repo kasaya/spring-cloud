@@ -1,13 +1,10 @@
 package com.oycl.service.impl;
 
-import exception.NormalExciton;
+import com.oycl.exception.NormalExciton;
 import org.springframework.remoting.RemoteAccessException;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-
-
-import java.util.Random;
 
 @Service
 public class RetryServiceImpl {

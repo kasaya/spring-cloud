@@ -9,7 +9,7 @@ import com.oycl.mainserver.output.LoginOutput;
 import com.oycl.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import util.jwt.JwtTokenUtil;
+import com.oycl.util.jwt.JwtTokenUtil;
 
 import java.util.ArrayList;
 import java.util.List;

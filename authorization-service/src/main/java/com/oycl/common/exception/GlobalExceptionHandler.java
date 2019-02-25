@@ -24,63 +24,63 @@ public class GlobalExceptionHandler {
     /**
      * 捕捉系统异常
      * @param req
-     * @param exception
+     * @param com.oycl.exception
      * @return
      * @throws Exception
      */
 //    @ExceptionHandler(value = Exception.class)
 //    @ResponseBody
-//    public BaseOutput defaultErrorHandler(HttpServletRequest req, Exception exception) throws Exception {
+//    public BaseOutput defaultErrorHandler(HttpServletRequest req, Exception com.oycl.exception) throws Exception {
 //
 //
-//        exception.printStackTrace();
+//        com.oycl.exception.printStackTrace();
 //        BaseOutput outPutBean = new BaseOutput();
 //        outPutBean.setResultCode(Constants.ResultCode.SYS_ERR);
 //        outPutBean.setResultMessage("系统异常,请联系管理员!");
-//        logger.error("========[code:205] 系统异常,请联系管理员!======", exception);
+//        logger.error("========[code:205] 系统异常,请联系管理员!======", com.oycl.exception);
 //        return outPutBean;
 //    }
 //
 //    /**
 //     * 捕捉系统异常
 //     * @param req
-//     * @param exception
+//     * @param com.oycl.exception
 //     * @return
 //     * @throws Exception
 //     */
 //    @ExceptionHandler(value = SQLException.class)
 //    @ResponseBody
-//    public BaseOutput sqlErrorHandler(HttpServletRequest req, SQLException exception) throws Exception {
+//    public BaseOutput sqlErrorHandler(HttpServletRequest req, SQLException com.oycl.exception) throws Exception {
 //
-//        exception.printStackTrace();
+//        com.oycl.exception.printStackTrace();
 //        BaseOutput outPutBean = new BaseOutput();
 //        outPutBean.setResultCode(Constants.ResultCode.SYS_ERR);
 //        outPutBean.setResultMessage("系统异常,请联系管理员!");
-//        logger.error("========[code:205] Sql异常,请联系管理员!======", exception);
+//        logger.error("========[code:205] Sql异常,请联系管理员!======", com.oycl.exception);
 //        return outPutBean;
 //    }
 //
 //    /**
 //     * 捕捉系统异常
 //     * @param req
-//     * @param exception
+//     * @param com.oycl.exception
 //     * @return
 //     * @throws Exception
 //     */
 //    @ExceptionHandler(value = MyBatisSystemException.class)
 //    @ResponseBody
-//    public BaseOutput tooManyResultsErrorHandler(HttpServletRequest req, MyBatisSystemException exception) throws Exception {
+//    public BaseOutput tooManyResultsErrorHandler(HttpServletRequest req, MyBatisSystemException com.oycl.exception) throws Exception {
 //
-//        exception.printStackTrace();
+//        com.oycl.exception.printStackTrace();
 //        BaseOutput outPutBean = new BaseOutput();
-//        Throwable error = exception.getCause();
+//        Throwable error = com.oycl.exception.getCause();
 //        outPutBean.setResultCode(Constants.ResultCode.BUSS_ERR);
 //        outPutBean.setResultMessage("Sql异常,请联系管理员!");
 //        if(error instanceof TooManyResultsException){
 //            outPutBean.setResultCode(Constants.ResultCode.BUSS_ERR);
 //            outPutBean.setResultMessage("业务数据不整合，请确认业务是否正确！");
 //        }
-//        logger.error("========[code:205] Sql异常,请联系管理员!======", exception);
+//        logger.error("========[code:205] Sql异常,请联系管理员!======", com.oycl.exception);
 //        return outPutBean;
 //    }
 }

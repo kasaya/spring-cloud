@@ -25,7 +25,7 @@
         <base-defination.version>1.0.0-RELEASE</base-defination.version>
         <base-data.version>1.0.0-RELEASE</base-data.version>
         <mybatis.version>1.3.2</mybatis.version>
-        <mybatis-plus.version>2.3</mybatis-plus.version>
+        <mybatis-plus.version>3.0.6</mybatis-plus.version>
     </properties>
 
     <dependencies>
@@ -49,11 +49,6 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!--redis-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
 
         <!--springframework web-->
         <dependency>
@@ -154,14 +149,14 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus</artifactId>
-                <version>3.0-RC</version>
+                <version>3.0.6</version>
             </dependency>
 
             <!--mysql-->
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.12</version>
+                <version>6.0.6</version>
             </dependency>
 
         </dependencies>

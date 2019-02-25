@@ -34,7 +34,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis的set
      *
-     * @see com.cango.service.redis.IRedisService#set(java.lang.String,
+     * @see com.cango.com.oycl.service.redis.IRedisService#set(java.lang.String,
      * java.lang.String)
      */
     @Override
@@ -73,7 +73,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis的get
      *
-     * @see com.cango.service.redis.IRedisService#get(java.lang.String)
+     * @see com.cango.com.oycl.service.redis.IRedisService#get(java.lang.String)
      */
     @Override
     public String get(String key) {
@@ -94,7 +94,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis设置超时时间
      *
-     * @see com.cango.service.redis.IRedisService#expire(java.lang.String, long)
+     * @see com.cango.com.oycl.service.redis.IRedisService#expire(java.lang.String, long)
      */
     @Override
     public boolean expire(String key, long expire) {
@@ -114,7 +114,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis设置List的json
      *
-     * @see com.cango.service.redis.IRedisService#expire(java.lang.String, long)
+     * @see com.cango.com.oycl.service.redis.IRedisService#expire(java.lang.String, long)
      */
     @Override
     public <T> boolean setList(String key, List<T> list) {
@@ -125,7 +125,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis获取List的json
      *
-     * @see com.cango.service.redis.IRedisService#expire(java.lang.String, long)
+     * @see com.cango.com.oycl.service.redis.IRedisService#expire(java.lang.String, long)
      */
     @Override
     public <T> List<T> getList(String key, Class<T> clz) {
@@ -140,7 +140,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis 列表(List) 左插入
      *
-     * @see com.cango.service.redis.IRedisService#expire(java.lang.String, long)
+     * @see com.cango.com.oycl.service.redis.IRedisService#expire(java.lang.String, long)
      */
     @Override
     public long lpush(String key, Object obj) {
@@ -162,7 +162,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis 列表(List) 右插入
      *
-     * @see com.cango.service.redis.IRedisService#expire(java.lang.String, long)
+     * @see com.cango.com.oycl.service.redis.IRedisService#expire(java.lang.String, long)
      */
     @Override
     public long rpush(String key, Object obj) {
@@ -184,7 +184,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis 列表(List) 移出并获取列表的第一个元素
      *
-     * @see com.cango.service.redis.IRedisService#expire(java.lang.String, long)
+     * @see com.cango.com.oycl.service.redis.IRedisService#expire(java.lang.String, long)
      */
     @Override
     public String lpop(String key) {
@@ -205,7 +205,7 @@ public class RedisServiceImpl implements IRedisService {
     /*
      * redis 设置过期时间
      *
-     * @see com.cango.service.redis.IRedisService#expire(java.lang.String, long)
+     * @see com.cango.com.oycl.service.redis.IRedisService#expire(java.lang.String, long)
      */
     @Override
     public boolean set(String key, String value, long seconds) {

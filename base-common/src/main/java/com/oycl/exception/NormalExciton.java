@@ -1,4 +1,4 @@
-package exception;
+package com.oycl.exception;
 
 /**
  * 系统异常

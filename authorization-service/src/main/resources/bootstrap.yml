@@ -6,14 +6,14 @@ spring:
 spring:
   profiles: dev
   cloud:
-    config:
+    com.oycl.config:
       label: master
       profile: dev
       discovery:
         enabled: true
-        serviceId: config-server
+        serviceId: com.oycl.config-server
   application:
-    name: authorization-service
+    name: authorization-com.oycl.service
 
 eureka:
   client:
@@ -28,14 +28,14 @@ eureka:
 spring:
   profiles: prod
   cloud:
-    config:
+    com.oycl.config:
       label: master
       profile: prod
       discovery:
         enabled: true
-        serviceId: config-server
+        serviceId: com.oycl.config-server
   application:
-    name: authorization-service
+    name: authorization-com.oycl.service
 
 
 eureka:
@@ -51,14 +51,14 @@ eureka:
 spring:
   profiles: stage
   cloud:
-    config:
+    com.oycl.config:
       label: master
       profile: stage
       discovery:
         enabled: true
-        serviceId: config-server
+        serviceId: com.oycl.config-server
   application:
-    name: authorization-service
+    name: authorization-com.oycl.service
 
 eureka:
   client:
@@ -73,14 +73,14 @@ eureka:
 spring:
   profiles: test
   cloud:
-    config:
+    com.oycl.config:
       label: master
       profile: test
       discovery:
         enabled: true
-        serviceId: config-server
+        serviceId: com.oycl.config-server
   application:
-    name: authorization-service
+    name: authorization-com.oycl.service
 
   eureka:
     client:
@@ -97,14 +97,14 @@ spring:
 spring:
   profiles: local
   cloud:
-    config:
+    com.oycl.config:
       label: master
       profile: local
       discovery:
         enabled: true
-        serviceId: config-server
+        serviceId: com.oycl.config-server
   application:
-    name: authorization-service
+    name: authorization-com.oycl.service
 
 eureka:
   client:

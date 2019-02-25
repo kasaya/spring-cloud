@@ -5,6 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+/**
+ * Topic
+ * Topic类型的exchange是很强大的，也可以实现其它类型的exchange。
+
+     当一个队列被绑定为binding key为”#”时，它将会接收所有的消息，此时和fanout类型的exchange很像。
+     当binding key不包含”*”和”#”时，这时候就很像direct类型的exchange。
+ */
 @Profile({"tut5","topics"})
 @Configuration
 public class Tut5Config {

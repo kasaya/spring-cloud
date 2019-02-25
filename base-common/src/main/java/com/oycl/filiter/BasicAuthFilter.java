@@ -1,4 +1,4 @@
-package filiter;
+package com.oycl.filiter;
 
 public class BasicAuthFilter {
 }

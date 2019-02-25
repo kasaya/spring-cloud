@@ -11,5 +11,5 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
-    service-url:
+    com.oycl.service-url:
       defaultZone: http://prod2:9092/eureka/

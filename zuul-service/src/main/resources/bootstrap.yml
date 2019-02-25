@@ -5,7 +5,7 @@ spring:
   profiles:
     active: @profiles.active@
   application:
-      name: zuul-service
+      name: zuul-com.oycl.service
 #eureka 注册中心配置
 eureka:
   client:
@@ -26,7 +26,7 @@ spring:
     config:
       discovery:
         enabled: true
-        service-id: config-server
+        service-id: com.oycl.config-server
       profile: local
       label: master #默认master
       fail-fast: true  #连不上快速失效并报错
@@ -43,7 +43,7 @@ spring:
     config:
       discovery:
         enabled: true
-        service-id: config-server
+        service-id: com.oycl.config-server
       profile: dev
       label: master #默认master
       username: kasaya

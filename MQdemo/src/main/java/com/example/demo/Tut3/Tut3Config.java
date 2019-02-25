@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+/**
+ * 发布与订阅
+ */
 @Profile({"tut3", "pub-sub", "publish-subscribe"})
 @Configuration
 public class Tut3Config {

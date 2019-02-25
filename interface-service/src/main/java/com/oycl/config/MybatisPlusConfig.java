@@ -15,7 +15,7 @@ public class MybatisPlusConfig {
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer scannerConfigurer = new MapperScannerConfigurer();
-        scannerConfigurer.setBasePackage("com.oycl.mbplus.model");
+        scannerConfigurer.setBasePackage("com.oycl.orm.dao,com.oycl.dao");
         return scannerConfigurer;
     }
 

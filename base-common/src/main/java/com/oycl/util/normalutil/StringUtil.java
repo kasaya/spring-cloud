@@ -1,4 +1,4 @@
-package util.normalutil;
+package com.oycl.util.normalutil;
 
 import org.apache.commons.lang3.StringUtils;
 

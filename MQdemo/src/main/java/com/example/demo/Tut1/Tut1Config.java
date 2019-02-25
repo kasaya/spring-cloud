@@ -1,6 +1,8 @@
 package com.example.demo.Tut1;
 
-
+/**
+ * hello-world 单一的发送者与接受者
+ */
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;

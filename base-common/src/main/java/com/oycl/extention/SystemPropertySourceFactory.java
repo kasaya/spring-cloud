@@ -1,10 +1,8 @@
-package extention;
+package com.oycl.extention;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.PropertySource;
-import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.PropertySourceFactory;
 import org.springframework.core.io.support.ResourcePropertySource;
@@ -12,7 +10,6 @@ import org.springframework.core.io.support.ResourcePropertySource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +24,6 @@ public class SystemPropertySourceFactory implements PropertySourceFactory {
 
     @Override
     public PropertySource<?> createPropertySource(String name, EncodedResource encodedResource) throws IOException {
-        FileSystemResourceLoader resourceLoader = new FileSystemResourceLoader();
         //取得当前活动的环境名称（ spring.profiles.active 取得失败）
         String[] fileproperty = encodedResource.getResource().getFilename().split("\\.");
         String[] actives = fileproperty[0].replace(name + "-", "").split(",");

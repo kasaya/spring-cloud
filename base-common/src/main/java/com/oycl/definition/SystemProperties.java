@@ -1,5 +1,4 @@
-package definition;
-
+package com.oycl.definition;
 
 
 import com.oycl.extention.SystemPropertySourceFactory;
@@ -8,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource(name="systemConfig", value = {"classpath*:/config/systemConfig-${spring.profiles.active}.properties"}, factory = SystemPropertySourceFactory.class)
+@PropertySource(name="systemConfig", value = {"classpath:/config/systemConfig-${spring.profiles.active}.properties"}, factory = SystemPropertySourceFactory.class)
 public class SystemProperties {
 
 

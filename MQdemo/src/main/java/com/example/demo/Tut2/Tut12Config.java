@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+
+/**
+ * 工作队列
+ */
 @Profile({"tut2","work-queues"})
 @Configuration
 public class Tut12Config {

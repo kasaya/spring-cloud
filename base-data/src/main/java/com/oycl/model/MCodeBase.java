@@ -1,4 +1,4 @@
-package com.oycl.mbplus.model;
+package com.oycl.model;
 
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -10,45 +10,41 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 城市
+ * CODE定义
  * </p>
  *
  * @author cango
  * @since 2019-01-15
  */
-public class MCityBase implements Serializable {
+public class MCodeBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 城市ID
+     * 分类编号
      */
-    @TableId(value = "city_id", type = IdType.INPUT)
-    private String cityId;
+    @TableId(value = "class_cd", type = IdType.INPUT)
+    private String classCd;
     /**
-     * 城市编号
+     * 分类名称
      */
-    private String cityCd;
+    private String className;
     /**
-     * ,城市名称
+     * 选项编号
      */
-    private String cityName;
+    private String itemCd;
     /**
-     * 省ID
+     * 选项值
      */
-    private String provinceId;
+    private String itemValue;
     /**
-     * 有效
+     * 表示内容
      */
-    private String validflg;
+    private String itemContent;
     /**
-     * 备注
+     * 备用信息
      */
-    private String comment;
-    /**
-     * 高风险城市FLG
-     */
-    private String cityHighriskFlg;
+    private String itemInfo;
     /**
      * 预备数值1
      */
@@ -87,60 +83,52 @@ public class MCityBase implements Serializable {
     private String updateUser;
 
 
-    public String getCityId() {
-        return cityId;
+    public String getClassCd() {
+        return classCd;
     }
 
-    public void setCityId(String cityId) {
-        this.cityId = cityId;
+    public void setClassCd(String classCd) {
+        this.classCd = classCd;
     }
 
-    public String getCityCd() {
-        return cityCd;
+    public String getClassName() {
+        return className;
     }
 
-    public void setCityCd(String cityCd) {
-        this.cityCd = cityCd;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
-    public String getCityName() {
-        return cityName;
+    public String getItemCd() {
+        return itemCd;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setItemCd(String itemCd) {
+        this.itemCd = itemCd;
     }
 
-    public String getProvinceId() {
-        return provinceId;
+    public String getItemValue() {
+        return itemValue;
     }
 
-    public void setProvinceId(String provinceId) {
-        this.provinceId = provinceId;
+    public void setItemValue(String itemValue) {
+        this.itemValue = itemValue;
     }
 
-    public String getValidflg() {
-        return validflg;
+    public String getItemContent() {
+        return itemContent;
     }
 
-    public void setValidflg(String validflg) {
-        this.validflg = validflg;
+    public void setItemContent(String itemContent) {
+        this.itemContent = itemContent;
     }
 
-    public String getComment() {
-        return comment;
+    public String getItemInfo() {
+        return itemInfo;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getCityHighriskFlg() {
-        return cityHighriskFlg;
-    }
-
-    public void setCityHighriskFlg(String cityHighriskFlg) {
-        this.cityHighriskFlg = cityHighriskFlg;
+    public void setItemInfo(String itemInfo) {
+        this.itemInfo = itemInfo;
     }
 
     public String getPrepNum1() {
@@ -209,14 +197,13 @@ public class MCityBase implements Serializable {
 
     @Override
     public String toString() {
-        return "MCity{" +
-        "cityId=" + cityId +
-        ", cityCd=" + cityCd +
-        ", cityName=" + cityName +
-        ", provinceId=" + provinceId +
-        ", validflg=" + validflg +
-        ", comment=" + comment +
-        ", cityHighriskFlg=" + cityHighriskFlg +
+        return "MCode{" +
+        "classCd=" + classCd +
+        ", className=" + className +
+        ", itemCd=" + itemCd +
+        ", itemValue=" + itemValue +
+        ", itemContent=" + itemContent +
+        ", itemInfo=" + itemInfo +
         ", prepNum1=" + prepNum1 +
         ", prepNum2=" + prepNum2 +
         ", prepChar1=" + prepChar1 +

@@ -1,4 +1,4 @@
-package util.normalutil;
+package com.oycl.util.normalutil;
 
 import org.apache.http.HeaderIterator;
 import org.apache.http.HttpEntity;
@@ -29,8 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
 import java.util.Map;
 
