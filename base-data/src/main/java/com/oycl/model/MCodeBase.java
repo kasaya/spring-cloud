@@ -1,10 +1,7 @@
 package com.oycl.model;
 
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 
@@ -16,6 +13,7 @@ import java.io.Serializable;
  * @author cango
  * @since 2019-01-15
  */
+@TableName(value = "m_code")
 public class MCodeBase implements Serializable {
 
     private static final long serialVersionUID = 1L;

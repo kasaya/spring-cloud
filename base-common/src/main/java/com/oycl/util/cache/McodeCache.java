@@ -1,8 +1,6 @@
 package com.oycl.util.cache;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-
 import com.oycl.model.MCodeBase;
 import com.oycl.orm.dao.MCodeMapper;
 import org.slf4j.Logger;
@@ -25,9 +23,9 @@ public class McodeCache {
 
     @Cacheable
     public List<MCodeBase> getMcode(String classCd){
-        logger.debug("getMcode start");
-        Wrapper<MCodeBase> wrapper = new QueryWrapper<>();
-        wrapper.getEntity().setClassCd(classCd);
+        logger.info("getMcode start");
+        QueryWrapper<MCodeBase> wrapper = new QueryWrapper<>();
+        wrapper.eq("class_cd", classCd);
         return mCodeMapper.selectList(wrapper);
     }
 
