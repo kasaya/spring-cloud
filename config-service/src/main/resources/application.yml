@@ -17,10 +17,16 @@ spring:
         enabled: true
 #endpoint
 management:
+  endpoint:
+    httptrace:
+      enabled: true
   endpoints:
     web:
       exposure:
-        include: ['bus-refresh','trace']
+        include: ['*'] #开启所有端点 httptrace <-路由追踪
+      base-path: /
+    enabled-by-default: true
+
 server:
   port: 9093
 
@@ -29,6 +35,11 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${eureka.url}
+  instance:
+    #健康检查页面
+    health-check-url-path: /status
+      #状态页面
+    status-page-url-path: /health
 ---
 #本地环境启用native环境，扫描本地文件
 spring:

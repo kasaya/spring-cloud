@@ -4,12 +4,12 @@ spring:
   application:
     name: eureka
 server:
-  port: 9090
+  port: 9093
 eureka:
   instance:
     hostname: prod1
   client:
     register-with-eureka: true
     fetch-registry: true
-    com.oycl.service-url:
+    service-url:
       defaultZone: http://prod2:9092/eureka/
