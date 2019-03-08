@@ -2,11 +2,11 @@
 spring:
   profiles:
     active: @profiles.active@
-  security:
+  security:  #httpbasic用户名密码配置
     user:
       name: kasaya
       password: kasaya
-  rabbitmq:
+  rabbitmq:  #mq配置
     host: localhost
     port: 5672
     username: springcloud
@@ -82,8 +82,6 @@ spring:
           timeout: 300 #链接超时时间
           uri: git@github.com:kasaya/config-file-lib.git
           #uri:  http://172.17.32.3/scf-service/scf-config-server.git  http模式
-          #username: configuser
-          #password: configpassowrd
           search-paths: '{application}'
 #注册中心地址
 eureka:

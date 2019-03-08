@@ -15,7 +15,8 @@
         <groupId>com.oycl</groupId>
         <artifactId>server-base</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <!--<relativePath/> -->
+        <relativePath>../server-base/pom.xml</relativePath>
     </parent>
 
     <dependencies>
@@ -50,7 +51,12 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
-
 
 </project>

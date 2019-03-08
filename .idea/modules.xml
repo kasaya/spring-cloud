@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/authorization-service/authorization-service.iml" filepath="$PROJECT_DIR$/authorization-service/authorization-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/base-common/base-common.iml" filepath="$PROJECT_DIR$/base-common/base-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/base-data/base-data.iml" filepath="$PROJECT_DIR$/base-data/base-data.iml" />
       <module fileurl="file://$PROJECT_DIR$/base-defination/base-defination.iml" filepath="$PROJECT_DIR$/base-defination/base-defination.iml" />
@@ -13,6 +12,7 @@
       <module fileurl="file://$PROJECT_DIR$/main-service/main-service.iml" filepath="$PROJECT_DIR$/main-service/main-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/server-base/server-base.iml" filepath="$PROJECT_DIR$/server-base/server-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/spring-cloud.iml" filepath="$PROJECT_DIR$/.idea/spring-cloud.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-gateway-service/spring-gateway-service.iml" filepath="$PROJECT_DIR$/spring-gateway-service/spring-gateway-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/zuul-service/zuul-service.iml" filepath="$PROJECT_DIR$/zuul-service/zuul-service.iml" />
     </modules>
   </component>

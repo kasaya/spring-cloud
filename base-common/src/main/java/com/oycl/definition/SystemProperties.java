@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource(name="systemConfig", value = {"classpath:/config/systemConfig-${spring.profiles.active}.properties"}, factory = SystemPropertySourceFactory.class)
+@PropertySource(name="systemConfig", value = {"classpath:/systemConfig-${spring.profiles.active}.properties"}, factory = SystemPropertySourceFactory.class)
 public class SystemProperties {
 
 
