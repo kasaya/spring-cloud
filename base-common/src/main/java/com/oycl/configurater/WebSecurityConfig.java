@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import org.springframework.context.annotation.Configuration;
+
 /**
  * 配置httpbasic security
  */
@@ -27,7 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
-
 
         // 所有的Rest服务一定要设置为无状态，以提升操作性能
         http

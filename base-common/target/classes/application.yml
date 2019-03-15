@@ -12,3 +12,6 @@ spring:
     host: 10.42.0.23
     port: 6379
 
+oycl:
+  logconfig:
+    enable: true

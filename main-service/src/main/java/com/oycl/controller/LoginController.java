@@ -14,6 +14,8 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
+
 @RefreshScope
 @RestController
 public class LoginController {
@@ -33,7 +35,12 @@ public class LoginController {
     @PostMapping(value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
     public LoginOutput login(@RequestBody LoginInput input) {
         LoginOutput reslut =  new LoginOutput(); //loginService.login(input);
-        reslut.setResultMessage(value);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        reslut.setResultMessage("success");
         return reslut;
     }
 

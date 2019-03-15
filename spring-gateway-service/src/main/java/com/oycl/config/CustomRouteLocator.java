@@ -4,6 +4,7 @@ import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.gateway.config.GlobalCorsProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableDiscoveryClient
@@ -47,4 +53,6 @@ public class CustomRouteLocator {
         UserDetails user = User.withDefaultPasswordEncoder().username("kasaya").password("kasaya").roles("USER").build();
         return new MapReactiveUserDetailsService(user);
     }
+
+
 }

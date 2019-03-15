@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@CacheConfig(cacheNames = "Mcode")
+//@CacheConfig(cacheNames = "Mcode")
 public class McodeCache {
 
     Logger logger = LoggerFactory.getLogger(McodeCache.class);
@@ -21,7 +21,7 @@ public class McodeCache {
     @Autowired
     MCodeMapper mCodeMapper;
 
-    @Cacheable
+    //@Cacheable
     public List<MCodeBase> getMcode(String classCd){
         logger.info("getMcode start");
         QueryWrapper<MCodeBase> wrapper = new QueryWrapper<>();
