@@ -36,16 +36,7 @@ public class CustomRouteLocator {
 
     }
 
-    @Bean
-    SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
-        return http.httpBasic().and()
-                .csrf().disable()
-                .authorizeExchange()
-                .pathMatchers("/scf/**").authenticated()
-                .anyExchange().permitAll()
-                .and()
-                .build();
-    }
+
 
     @Bean
     public MapReactiveUserDetailsService reactiveUserDetailsService() {
@@ -53,6 +44,8 @@ public class CustomRouteLocator {
         UserDetails user = User.withDefaultPasswordEncoder().username("kasaya").password("kasaya").roles("USER").build();
         return new MapReactiveUserDetailsService(user);
     }
+
+
 
 
 }

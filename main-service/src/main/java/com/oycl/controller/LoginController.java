@@ -1,9 +1,6 @@
 package com.oycl.controller;
 
 
-import com.oycl.interfaceserver.api.InterfaceService;
-import com.oycl.interfaceserver.input.GetMcodeInput;
-import com.oycl.interfaceserver.output.GetMcodeOutPut;
 import com.oycl.mainserver.input.LoginInput;
 import com.oycl.mainserver.output.LoginOutput;
 import com.oycl.service.LoginService;
@@ -26,9 +23,6 @@ public class LoginController {
     @Autowired
     private RetryServiceImpl retryService;
 
-    @Autowired
-    private InterfaceService interfaceService;
-
     @Value("${user.mate}")
     private String value;
 
@@ -50,9 +44,4 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value = "/getMcode",method = RequestMethod.POST)
-    public GetMcodeOutPut test(@RequestBody GetMcodeInput input) {
-        GetMcodeOutPut outPut = interfaceService.getMcode(input);
-        return outPut;
-    }
 }

@@ -1,8 +1,6 @@
 package com.oycl.model;
 
 
-import com.baomidou.mybatisplus.annotation.*;
-
 import java.io.Serializable;
 
 /**
@@ -13,7 +11,6 @@ import java.io.Serializable;
  * @author cango
  * @since 2019-01-15
  */
-@TableName(value = "m_code")
 public class MCodeBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,7 +18,7 @@ public class MCodeBase implements Serializable {
     /**
      * 分类编号
      */
-    @TableId(value = "class_cd", type = IdType.INPUT)
+
     private String classCd;
     /**
      * 分类名称
@@ -62,22 +59,19 @@ public class MCodeBase implements Serializable {
     /**
      * 新增日期时间
      */
-    @TableField(fill = FieldFill.INSERT)
     private String createDateTime;
     /**
      * 新增人
      */
-    @TableField(fill = FieldFill.INSERT)
     private String createUser;
     /**
      * 更新日期时间
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+
     private String lastUpdateTime;
     /**
      * 更新人
      */
-    @TableField(fill = FieldFill.INSERT)
     private String updateUser;
 
 

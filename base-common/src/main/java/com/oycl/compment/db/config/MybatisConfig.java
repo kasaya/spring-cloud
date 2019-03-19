@@ -1,0 +1,39 @@
+package com.oycl.compment.db.config;
+
+import com.oycl.compment.db.MybatisConfiguration;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.mybatis.spring.annotation.MapperScan;
+
+
+public class MybatisConfig {
+    private static SqlSessionFactory sessionFactory;
+
+    public static SqlSessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            PooledDataSource dataSource = getDataSource();
+            TransactionFactory transactionFactory = new JdbcTransactionFactory();
+            Environment environment = new Environment("development", transactionFactory, dataSource);
+            Configuration configuration = new MybatisConfiguration(environment);
+            configuration.addMappers("");
+            // configuration.addMapper(UserMapper.class);
+            sessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+        }
+        return sessionFactory;
+    }
+
+    private static PooledDataSource getDataSource() {
+        PooledDataSource dataSource = dataSource = new PooledDataSource();
+        dataSource.setDriver("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/test");
+        dataSource.setUsername("root");
+        dataSource.setPassword("123456");
+        return dataSource;
+    }
+
+}

@@ -1,5 +1,6 @@
 package com.oycl.configurater;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 配置httpbasic security
  */
+@ConditionalOnProperty(name = "spring.security.user")
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

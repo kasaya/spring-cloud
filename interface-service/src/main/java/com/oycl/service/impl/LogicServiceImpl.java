@@ -16,23 +16,23 @@ import java.util.List;
 @Service
 public class LogicServiceImpl implements LogicService {
 
-    @Autowired
-    McodeCache mcodeCache;
+//    @Autowired
+//    McodeCache mcodeCache;
 
 
     @Override
     public GetMcodeOutPut getMcode(GetMcodeInput input) {
 
-        List<MCodeBase> mCodeBaseList =  mcodeCache.getMcode(input.getClassCd());
+        //List<MCodeBase> mCodeBaseList =  mcodeCache.getMcode(input.getClassCd());
         GetMcodeOutPut result= new GetMcodeOutPut();
-        final List<GetMcodeOutPut.McodeEntity> list = new ArrayList<>();
-        mCodeBaseList.forEach(item->{
-            GetMcodeOutPut.McodeEntity entity = new GetMcodeOutPut.McodeEntity();
-            BeanUtils.copyProperties(item,entity);
-            list.add(entity);
-        });
-        //模拟业务处理
-        result.setMcodeEntity(list);
+//        final List<GetMcodeOutPut.McodeEntity> list = new ArrayList<>();
+//        mCodeBaseList.forEach(item->{
+//            GetMcodeOutPut.McodeEntity entity = new GetMcodeOutPut.McodeEntity();
+//            BeanUtils.copyProperties(item,entity);
+//            list.add(entity);
+//        });
+//        //模拟业务处理
+//        result.setMcodeEntity(list);
         return result;
     }
 }
