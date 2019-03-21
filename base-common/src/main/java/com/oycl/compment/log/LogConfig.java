@@ -9,8 +9,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
 @ConditionalOnClass(Aspect.class)
-@ConditionalOnProperty(name = "oycl.logconfig.enable", havingValue = "true")
-@Configuration
 @EnableAspectJAutoProxy
 @Import({LogProcess.class, DbLogProcess.class})
 public class LogConfig {

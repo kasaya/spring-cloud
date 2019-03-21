@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 配置httpbasic security
  */
-@ConditionalOnProperty(name = "spring.security.user")
+//@ConditionalOnProperty(name = "spring.security.user")
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oycl.zz.dao.MCodeMapper">
+
+                <!-- 通用查询映射结果 -->
+        <resultMap id="MCode" type="com.oycl.model.MCode">
+            <id column="class_cd" property="classCd"/>
+            <result column="class_name" property="className"/>
+            <result column="item_cd" property="itemCd"/>
+            <result column="item_value" property="itemValue"/>
+            <result column="item_content" property="itemContent"/>
+            <result column="item_info" property="itemInfo"/>
+            <result column="prep_num1" property="prepNum1"/>
+            <result column="prep_num2" property="prepNum2"/>
+            <result column="prep_char1" property="prepChar1"/>
+            <result column="prep_char2" property="prepChar2"/>
+            <result column="create_date_time" property="createDateTime"/>
+            <result column="create_user" property="createUser"/>
+            <result column="last_update_time" property="lastUpdateTime"/>
+            <result column="update_user" property="updateUser"/>
+        </resultMap>
+
+                <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+            class_cd, class_name, item_cd, item_value, item_content, item_info, prep_num1, prep_num2, prep_char1, prep_char2, create_date_time, create_user, last_update_time, update_user
+        </sql>
+                                                                                                                                                                                            <!-- 查询 -->
+
+</mapper>

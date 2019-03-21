@@ -1,38 +1,35 @@
 package com.oycl.service.impl;
 
+
 import com.oycl.interfaceserver.input.GetMcodeInput;
 import com.oycl.interfaceserver.output.GetMcodeOutPut;
-import com.oycl.model.MCodeBase;
+import com.oycl.model.MCode;
 import com.oycl.service.LogicService;
-import com.oycl.util.cache.McodeCache;
-import org.springframework.beans.BeanUtils;
+import com.oycl.zz.dao.MCodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
 public class LogicServiceImpl implements LogicService {
 
-//    @Autowired
-//    McodeCache mcodeCache;
+    @Autowired
+    MCodeMapper mCodeMapper;
 
 
     @Override
     public GetMcodeOutPut getMcode(GetMcodeInput input) {
 
-        //List<MCodeBase> mCodeBaseList =  mcodeCache.getMcode(input.getClassCd());
+        //List<MCode> mCodeBaseList =  mcodeCache.getMcode(input.getClassCd());
         GetMcodeOutPut result= new GetMcodeOutPut();
-//        final List<GetMcodeOutPut.McodeEntity> list = new ArrayList<>();
-//        mCodeBaseList.forEach(item->{
-//            GetMcodeOutPut.McodeEntity entity = new GetMcodeOutPut.McodeEntity();
-//            BeanUtils.copyProperties(item,entity);
-//            list.add(entity);
-//        });
-//        //模拟业务处理
-//        result.setMcodeEntity(list);
+        MCode mCode = new MCode();
+        mCode.setClassCd("999");
+        mCode.setItemCd("01");
+        mCode.setItemValue("2");
+        mCode.setItemContent("1222");
+        mCode.setItemInfo("1");
+        mCodeMapper.updateByIdNotNull(mCode);
+        result.setResultMessage("success");
         return result;
     }
 }

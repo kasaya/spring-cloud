@@ -9,18 +9,27 @@ import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BaseMapperDriver extends XMLLanguageDriver {
+
+
+    //private final Pattern inPattern = Pattern.compile("(?<=(\\$\\{))([^\\$\\{\\}]+)");
 
 
     @Override
     public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
         Class<?> mapperClass = MybatisMapperRegistry.getCurrentMapper();
 
+        //取得实现的 泛型类型
         Class<?>[] generics = MybatisReflectUtil.getMapperGenerics(mapperClass);
+        // 实体类类型
         Class<?> modelClass = generics[0];
+        //主键数据类型
         Class<?> idClass = generics[1];
 
         ResultMap resultMap = getResultMap(configuration.getResultMaps(), modelClass);
@@ -34,9 +43,12 @@ public class BaseMapperDriver extends XMLLanguageDriver {
 
 
     private ResultMap getResultMap(Collection<ResultMap> resultMaps, Class<?> modelClass) {
-        for (ResultMap resultMap : resultMaps)
-            if (modelClass == resultMap.getType() && !resultMap.getId().contains("-"))
+        for (ResultMap resultMap : resultMaps){
+            if (modelClass == resultMap.getType() && !resultMap.getId().contains("-")){
                 return resultMap;
+            }
+        }
+
         return null;
     }
 
@@ -53,10 +65,13 @@ public class BaseMapperDriver extends XMLLanguageDriver {
     private String setTable(String script, Class<?> mapperClass, Class<?> modelClass, Class<?> idClass, ResultMap resultMap) {
         if (script.contains("${table}")) {
             String tableName = null;
-            if (resultMap != null)
-                tableName = resultMap.getId().substring(mapperClass.getName().length() + 1);
-            if (tableName == null)
+            if (resultMap != null){
+                String [] names = resultMap.getId().split("\\.");
+                tableName = toUnderline(names[names.length-1]);
+            }
+            if (tableName == null){
                 tableName = toUnderline(modelClass.getSimpleName());
+            }
 
             script = script.replace("${table}", tableName);
         }
@@ -64,15 +79,27 @@ public class BaseMapperDriver extends XMLLanguageDriver {
     }
 
     private String setId(String script, Class<?> mapperClass, Class<?> modelClass, Class<?> idClass, ResultMap resultMap) {
+        ResultMapping resultMapping = null;
         if (script.contains("${id}")) {
             String idName = null;
-            ResultMapping resultMapping = getIdResultMapping(resultMap, null);
-            if (resultMapping != null)
+            resultMapping = getIdResultMapping(resultMap, null);
+            if (resultMapping != null){
                 idName = resultMapping.getColumn();
-            if (idName == null)
+            }
+
+            if (idName == null){
                 idName = "id";
+            }
 
             script = script.replace("${id}", idName);
+        }
+
+        if (script.contains("${sets}")){
+            if(resultMapping != null){
+                String idName = null;
+                idName = resultMapping.getProperty();
+                script = script.replace("#{id}", "#{"+idName+"}");
+            }
         }
         return script;
     }
@@ -107,6 +134,14 @@ public class BaseMapperDriver extends XMLLanguageDriver {
     }
 
     private String setSets(String script, Class<?> mapperClass, Class<?> modelClass, Class<?> idClass, ResultMap resultMap) {
+
+        boolean isSelective = false;
+        boolean isNotnull = false;
+        if (script.contains("selective")){
+            isSelective = true;
+        }else if (script.contains("notnull")){
+            isNotnull = true;
+        }
         if (script.contains("${sets}")) {
             StringBuilder buf = new StringBuilder();
 
@@ -114,16 +149,21 @@ public class BaseMapperDriver extends XMLLanguageDriver {
 
             buf.append("<set>");
             for (Field field : fields) {
-                if (isIdField(resultMap, field))
+                if (isIdField(resultMap, field)){
                     continue;
-                buf.append(String.format("<if test=\"%s\">", getEmptyTesting(field)));
+                }
+                if(isSelective || isNotnull){
+                    buf.append(String.format("<if test=\"%s\">", getEmptyTesting(field, isNotnull)));
+                }
                 ResultMapping resultMapping = getResultMapping(resultMap, field);
                 buf.append(String.format("%s = %s,", getColumnName(resultMapping, field), getColumnValue(resultMapping, field)));
-                buf.append("</if>");
+                if(isSelective || isNotnull){
+                    buf.append("</if>");
+                }
             }
             buf.append("</set>");
 
-            script = script.replace("${sets}", buf.toString());
+            script = script.replace("${sets}", buf.toString()).replace("selective","").replace("notnull","");
         }
         return script;
     }
@@ -131,8 +171,9 @@ public class BaseMapperDriver extends XMLLanguageDriver {
     private boolean isIdField(ResultMap resultMap, Field field) {
         if (resultMap != null) {
             for (ResultMapping resultMapping : resultMap.getIdResultMappings()) {
-                if (resultMapping.getProperty().equals(field.getName()))
+                if (resultMapping.getProperty().equals(field.getName())){
                     return true;
+                }
             }
         }
         return false;
@@ -140,8 +181,10 @@ public class BaseMapperDriver extends XMLLanguageDriver {
 
     private ResultMapping getIdResultMapping(ResultMap resultMap, Field field) {
         if (resultMap != null) {
-            if (resultMap.getIdResultMappings().size() > 0)
+            if (resultMap.getIdResultMappings().size() > 0){
                 return resultMap.getIdResultMappings().get(0);
+            }
+
         }
         return null;
     }
@@ -149,30 +192,43 @@ public class BaseMapperDriver extends XMLLanguageDriver {
     private ResultMapping getResultMapping(ResultMap resultMap, Field field) {
         if (resultMap != null) {
             for (ResultMapping resultMapping : resultMap.getPropertyResultMappings()) {
-                if (resultMapping.getProperty().equals(field.getName()))
+                if (resultMapping.getProperty().equals(field.getName())){
                     return resultMapping;
+                }
             }
         }
         return null;
     }
 
     private String getEmptyTesting(Field field) {
+        return getEmptyTesting(field,false);
+    }
+
+    private String getEmptyTesting(Field field, boolean isNotNull) {
         if (String.class == field.getType()) {
-            return String.format("%s != null and %s != ''", field.getName(), field.getName());
-        } else {
+            if (!isNotNull) {
+                return String.format("%s != null and %s != ''", field.getName(), field.getName());
+            }else{
+                return String.format("%s != null", field.getName());
+            }
+        }else {
             return String.format("%s != null", field.getName());
         }
     }
 
     private String getColumnName(ResultMapping resultMapping, Field field) {
-        if (resultMapping == null)
+        if (resultMapping == null){
             return field.getName();
+        }
+
         return resultMapping.getColumn();
     }
 
     private String getColumnValue(ResultMapping resultMapping, Field field) {
-        if (resultMapping == null || resultMapping.getJdbcType() == null)
+        if (resultMapping == null || resultMapping.getJdbcType() == null){
             return String.format("#{%s}", field.getName());
+        }
+
         return String.format("#{%s,jdbcType=%s}", field.getName(), resultMapping.getJdbcType());
     }
 

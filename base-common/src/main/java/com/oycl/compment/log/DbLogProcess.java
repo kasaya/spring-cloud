@@ -18,7 +18,7 @@ public class DbLogProcess {
     private ILogManager logManager;
 
 
-    @Pointcut("execution(* com.oycl.orm.dao.*.*(..))")
+    @Pointcut("execution(* com.oycl..*Mapper.*(..))")
     public void wlogPoint(){}
 
     @Around("wlogPoint()")

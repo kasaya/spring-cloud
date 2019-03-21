@@ -11,7 +11,6 @@ spring:
     password: sOd3bZBFgdVyGRWC
     host: 10.42.0.23
     port: 6379
-
-oycl:
-  logconfig:
-    enable: true
+logging:
+  level:
+   com.oycl.zz.dao.MCodeMapper: debug # 改成你的mapper文件所在包路径
