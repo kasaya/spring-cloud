@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author cango
  * @since 2019-01-15
  */
-public class MCodeBase implements Serializable {
+public class MCode implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

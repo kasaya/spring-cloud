@@ -51,4 +51,9 @@ spring:
 #eureka 注册中心配置
 eureka:
   url: http://localhost:9090/eureka/
-
+---
+spring:
+  profiles: integTest
+  cloud:
+   config:
+     enabled: false

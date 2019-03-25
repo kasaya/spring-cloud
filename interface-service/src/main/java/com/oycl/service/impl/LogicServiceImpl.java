@@ -5,7 +5,7 @@ import com.oycl.interfaceserver.input.GetMcodeInput;
 import com.oycl.interfaceserver.output.GetMcodeOutPut;
 import com.oycl.model.MCode;
 import com.oycl.service.LogicService;
-import com.oycl.zz.dao.MCodeMapper;
+import com.oycl.orm.dao.MCodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

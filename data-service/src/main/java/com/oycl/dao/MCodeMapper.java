@@ -2,7 +2,7 @@ package com.oycl.dao;
 
 
 import com.oycl.compment.db.BaseMapper;
-import com.oycl.model.MCodeBase;
+import com.oycl.model.MCode;
 
 
 /**
@@ -13,6 +13,6 @@ import com.oycl.model.MCodeBase;
  * @author cango
  * @since 2019-01-15
  */
-public interface MCodeMapper extends BaseMapper<MCodeBase, Integer> {
+public interface MCodeMapper extends BaseMapper<MCode, Integer> {
 
 }

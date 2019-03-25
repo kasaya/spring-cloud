@@ -1,4 +1,4 @@
-package com.oycl.zz.dao;
+package com.oycl.orm.dao;
 
 
 import com.oycl.compment.db.BaseMapper;

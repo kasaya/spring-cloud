@@ -1,0 +1,17 @@
+#开发环境
+spring:
+  profiles: integTest
+  datasource:
+    driver-class-name: org.h2.Driver
+    #内存数据库（被命名）
+    #jdbc:h2:mem:<databasename>
+    url: jdbc:h2:mem:scf;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    schema: classpath:sql/schema.sql
+    data: classpath:sql/data.sql
+    initialization-mode: embedded
+  h2:
+    console:
+      enabled: true
+#eureka 注册中心配置
+eureka:
+  url: http://localhost:9090/eureka/
