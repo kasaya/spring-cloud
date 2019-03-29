@@ -1,19 +1,28 @@
 package com.oycl;
 
+import com.google.gson.Gson;
+import com.oycl.common.UserInfo;
+import com.oycl.util.jwt.JwtTokenUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.regex.Pattern.*;
 
 public class test {
+    static Gson gson = new Gson();
     public static void main(String[] args) {
-        String a = "UPDATE ${table} ${sets-selective} WHERE ${id}=#{id}";
+        UserInfo userInfo = new UserInfo();
+        userInfo.setLoginId("a");
+        userInfo.setName("b");
+        String a = JwtTokenUtil.INSTENS.generateToken(gson.toJson(userInfo));
+        System.out.println(a);
 //        Pattern parent = compile("(?<=(\\$\\{))([^\\$\\{\\}]+)");
 //        Matcher matcher = parent.matcher(a);
 //        while(matcher.find()){
 //            System.out.println(matcher.group());
 //        }
 
-        System.out.println(a.contains("selective"));
+      //  System.out.println(a.contains("selective"));
     }
 }

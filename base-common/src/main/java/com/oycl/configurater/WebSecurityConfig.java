@@ -1,6 +1,7 @@
 package com.oycl.configurater;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -10,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * 配置httpbasic security
@@ -20,6 +24,20 @@ import org.springframework.context.annotation.Configuration;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+//    /**
+//     * 添加用户权限
+//     * @return
+//     */
+//    @Bean
+//    public MapReactiveUserDetailsService reactiveUserDetailsService() {
+//
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("user")
+//                .password("user")
+//                .roles("USER")
+//                .build();
+//        return new MapReactiveUserDetailsService(user);
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

@@ -30,20 +30,21 @@ public class CustomRouteLocator {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 // 自定义路径 /infc/
-                .route("interface-service", r->r.path("/**/infc/**").filters(f->f.rewritePath("[^\\s]*/infc/(?<segment>.*)","/$\\{segment}"))
+                .route("interface-service",
+                        r->r.path("/**/infc/**")
+                                .filters(f->f.rewritePath("[^\\s]*/infc/(?<segment>.*)","/$\\{segment}"))
                         .uri("lb://interface-service"))
                 .build();
 
     }
 
+//    @Bean
+//    public MapReactiveUserDetailsService reactiveUserDetailsService() {
+//
+//        UserDetails user = User.withDefaultPasswordEncoder().username("kasaya").password("kasaya").roles("USER").build();
+//        return new MapReactiveUserDetailsService(user);
+//    }
 
-
-    @Bean
-    public MapReactiveUserDetailsService reactiveUserDetailsService() {
-
-        UserDetails user = User.withDefaultPasswordEncoder().username("kasaya").password("kasaya").roles("USER").build();
-        return new MapReactiveUserDetailsService(user);
-    }
 
 
 

@@ -39,4 +39,5 @@ public class UserInfo {
      **/
     private List<RoleEntity> role;
 
+
 }
