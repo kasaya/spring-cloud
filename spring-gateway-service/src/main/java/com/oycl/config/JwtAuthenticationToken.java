@@ -1,23 +1,30 @@
 package com.oycl.config;
 
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.List;
 
-public class JwtAuthenticationToken implements Authentication {
-    private List<GrantedAuthority> authorities;
-    private String name;
-    private boolean authenticated;
-    public JwtAuthenticationToken(List<GrantedAuthority> authorities, String id){
-        this.authorities = authorities;
-        this.name = id;
+public class JwtAuthenticationToken extends AbstractAuthenticationToken {
+    private String userName;
+
+    /**
+     * Creates a token with the supplied array of authorities.
+     *
+     * @param authorities the collection of <tt>GrantedAuthority</tt>s for the principal
+     *                    represented by this authentication object.
+     */
+    public JwtAuthenticationToken(Collection<? extends GrantedAuthority> authorities) {
+        super(authorities);
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+    public JwtAuthenticationToken(Collection<? extends GrantedAuthority> authorities, String principal) {
+        super(authorities);
+        this.userName = principal;
+        super.setAuthenticated(true);
     }
 
     @Override
@@ -26,27 +33,8 @@ public class JwtAuthenticationToken implements Authentication {
     }
 
     @Override
-    public Object getDetails() {
-        return null;
-    }
-
-    @Override
     public Object getPrincipal() {
-        return null;
-    }
-
-    @Override
-    public boolean isAuthenticated() {
-        return authenticated;
-    }
-
-    @Override
-    public void setAuthenticated(boolean isAuthenticate) throws IllegalArgumentException {
-        authenticated = isAuthenticate;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        return userName;
     }
 }
+

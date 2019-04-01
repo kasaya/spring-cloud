@@ -57,12 +57,15 @@ public class JwtSecurityContextRepository implements ServerSecurityContextReposi
 
 
             //验证通过： 获取授权信息
-            List<GrantedAuthority> authorities = tokenInfo.getAuthorities()
-                    .stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(toList());
+            List<GrantedAuthority> authorities = null;
+            if(tokenInfo.getAuthorities() != null){
+                authorities = tokenInfo.getAuthorities()
+                        .stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(toList());
+            }
             Authentication authentication = new JwtAuthenticationToken(authorities, tokenInfo.getUserName());
-            authentication.setAuthenticated(true);
+
 
             return Mono.justOrEmpty(new SecurityContextImpl(authentication));
         } catch (ExpiredJwtException e) {

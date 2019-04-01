@@ -32,7 +32,7 @@ public class TokenInfo {
             this.expiration = claims.getExpiration();
             this.id = claims.getId();
             this.subject = claims.getSubject();
-            this.authorities = CollectionUtils.isEmpty(userInfo.getRole())?new ArrayList<>():userInfo.getRole().stream().map(t->t.getRoleId()).collect(Collectors.toList());
+            this.authorities = CollectionUtils.isEmpty(userInfo.getRole())?null:userInfo.getRole().stream().map(t->t.getRoleId()).collect(Collectors.toList());
         }
     }
 
@@ -56,5 +56,17 @@ public class TokenInfo {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TokenInfo{");
+        sb.append("authorities=").append(authorities);
+        sb.append(", userName='").append(userName).append('\'');
+        sb.append(", expiration=").append(expiration);
+        sb.append(", id='").append(id).append('\'');
+        sb.append(", subject='").append(subject).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

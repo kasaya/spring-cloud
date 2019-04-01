@@ -40,4 +40,7 @@ public class UserInfo {
     private List<RoleEntity> role;
 
 
+    private List<String> auth;
+
+
 }

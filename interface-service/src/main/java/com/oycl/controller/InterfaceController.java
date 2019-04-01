@@ -8,10 +8,13 @@ import com.oycl.mainserver.input.LoginInput;
 import com.oycl.mainserver.output.LoginOutput;
 import com.oycl.service.LogicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.security.RolesAllowed;
 
 
 @RestController
@@ -23,7 +26,8 @@ public class InterfaceController implements LogEnable {
     @Autowired
     MainApi mainApi;
 
-
+    //@RolesAllowed("R06")
+    //@PreAuthorize("hasRole('R01')")
     @PostMapping(value = "/getmcode")
     public GetMcodeOutPut getMcode(@RequestBody GetMcodeInput input){
         return logicService.getMcode(input);

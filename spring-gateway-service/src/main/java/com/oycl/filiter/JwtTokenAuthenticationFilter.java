@@ -10,6 +10,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +27,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static java.util.stream.Collectors.toList;
 
@@ -32,7 +36,7 @@ import static java.util.stream.Collectors.toList;
  *  JWT认证
  * @author kasaya
  */
-public class JwtTokenAuthenticationFilter implements WebFilter {
+public class JwtTokenAuthenticationFilter implements GatewayFilter {
 
     private static final String TOKEN_SCHEME = "TOKEN=";
 
@@ -55,8 +59,9 @@ public class JwtTokenAuthenticationFilter implements WebFilter {
         return key;
     }
 
+
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (authHeader == null) {
             logger.warn("not find AUTHORIZATION");
@@ -68,7 +73,7 @@ public class JwtTokenAuthenticationFilter implements WebFilter {
             Claims claims = Jwts.parser().setSigningKey(generalKey()).parseClaimsJws(token).getBody();
             TokenInfo tokenInfo = new TokenInfo(claims);
             logger.info("token:{}  ", tokenInfo);
-
+            //TODO: 验证token 有效性
 
             return chain.filter(exchange);
         }catch (ExpiredJwtException e) {
@@ -80,8 +85,4 @@ public class JwtTokenAuthenticationFilter implements WebFilter {
         }
         return Mono.empty();
     }
-
-
-
-
 }

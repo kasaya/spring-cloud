@@ -38,15 +38,4 @@ public class CustomRouteLocator {
 
     }
 
-//    @Bean
-//    public MapReactiveUserDetailsService reactiveUserDetailsService() {
-//
-//        UserDetails user = User.withDefaultPasswordEncoder().username("kasaya").password("kasaya").roles("USER").build();
-//        return new MapReactiveUserDetailsService(user);
-//    }
-
-
-
-
-
 }
