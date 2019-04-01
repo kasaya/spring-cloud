@@ -1,0 +1,29 @@
+spring:
+ application:
+   name: gateway-server
+ cloud:
+  gateway:
+    discovery:
+     locator:
+       enabled: true
+# 直接通过discover找到server进行配置
+#       predicates: [
+#          {'name':'Path','args':{"pattern":"'/'+serviceId +'/**'"}}, #指定路径规则
+#          {'name':'Host','args':{"pattern":"'localhost'"}} #指定host
+#          ]
+#       lower-case-service-id: true
+
+    globalcors:
+      cors-configurations:
+        '[/**]':
+           allowedOrigins: ['*']
+           allowedMethods: ['*']
+           allowedHeaders: ['*']
+           allowCredentials: true
+#注册中心
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9090/eureka/
+server:
+  port: 9094
