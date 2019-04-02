@@ -12,7 +12,8 @@ spring:
 #          {'name':'Host','args':{"pattern":"'localhost'"}} #指定host
 #          ]
 #       lower-case-service-id: true
-
+    filter:
+      - JwtFiliter
     globalcors:
       cors-configurations:
         '[/**]':
