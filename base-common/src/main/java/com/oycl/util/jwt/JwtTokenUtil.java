@@ -52,6 +52,7 @@ public enum JwtTokenUtil  {
      * @return 数据声明
      */
     public Claims getClaimsFromToken(String token) {
+        token = token.replace(TOKEN_PREFIX,"");
         Claims claims;
         try {
             claims = Jwts.parser().setSigningKey(secret.getBytes("UTF-8")).parseClaimsJws(token).getBody();

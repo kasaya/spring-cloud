@@ -1,57 +1,61 @@
 spring:
     profiles:
       active: @profiles.active@
-
----
 spring:
-  profiles: dev
   cloud:
-    com.oycl.config:
+    config:
       label: master
       profile: dev
       discovery:
         enabled: true
-        serviceId:config-server
+        serviceId: config-server
   application:
     name: authorization-service
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8660/eureka/
+      defaultZone: ${defaultZone}
   instance:
       #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
       lease-expiration-duration-in-seconds: 30
       #服务刷新时间配置，每隔这个时间会主动心跳一次
       lease-renewal-interval-in-seconds: 10
+---
+spring:
+  profiles: dev
+  cloud:
+    config:
+      label: master
+      profile: dev
+      discovery:
+        enabled: true
+        serviceId: config-server
+  application:
+    name: authorization-service
+
+defaultZone: http://localhost:9090/eureka/
+
 ---
 spring:
   profiles: prod
   cloud:
-    com.oycl.config:
+    config:
       label: master
       profile: prod
       discovery:
         enabled: true
-        serviceId:config-server
+        serviceId: config-server
   application:
     name: authorization-service
 
+defaultZone: http://localhost:9090/eureka/
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8660/eureka/
-  instance:
-      #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
-      lease-expiration-duration-in-seconds: 30
-      #服务刷新时间配置，每隔这个时间会主动心跳一次
-      lease-renewal-interval-in-seconds: 10
 ---
 spring:
   profiles: stage
   cloud:
-    com.oycl.config:
+    config:
       label: master
       profile: stage
       discovery:
@@ -60,20 +64,12 @@ spring:
   application:
     name: authorization-service
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8660/eureka/
-  instance:
-      #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
-      lease-expiration-duration-in-seconds: 30
-      #服务刷新时间配置，每隔这个时间会主动心跳一次
-      lease-renewal-interval-in-seconds: 10
+defaultZone: http://localhost:9090/eureka/
 ---
 spring:
   profiles: test
   cloud:
-    com.oycl.config:
+    config:
       label: master
       profile: test
       discovery:
@@ -82,22 +78,13 @@ spring:
   application:
     name: authorization-service
 
-  eureka:
-    client:
-      serviceUrl:
-        defaultZone: http://localhost:8660/eureka/
-    instance:
-        #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
-        lease-expiration-duration-in-seconds: 30
-        #服务刷新时间配置，每隔这个时间会主动心跳一次
-        lease-renewal-interval-in-seconds: 10
-
+defaultZone: http://localhost:9090/eureka/
 ---
 
 spring:
   profiles: local
   cloud:
-    com.oycl.config:
+    config:
       label: master
       profile: local
       discovery:
@@ -106,12 +93,4 @@ spring:
   application:
     name: authorization-service
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8660/eureka/
-  instance:
-      #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
-      lease-expiration-duration-in-seconds: 30
-      #服务刷新时间配置，每隔这个时间会主动心跳一次
-      lease-renewal-interval-in-seconds: 10
+defaultZone: http://localhost:9090/eureka/

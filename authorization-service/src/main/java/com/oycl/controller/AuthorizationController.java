@@ -5,9 +5,10 @@ import com.oycl.common.base.BaseOutput;
 import com.oycl.common.definitions.Constants;
 import com.oycl.common.exception.CangoAplException;
 import com.oycl.input.GetTokenInput;
-import com.oycl.input.RegisterInput;
+import com.oycl.input.LoginInput;
 import com.oycl.input.VerifyTokenInput;
 import com.oycl.output.GetTokenOutput;
+import com.oycl.output.LoginOutput;
 import com.oycl.output.RegisterOutput;
 import com.oycl.output.VerifyTokenOutput;
 import com.oycl.service.AuthroizationService;
@@ -27,12 +28,12 @@ public class AuthorizationController {
     AuthroizationService authroizationService;
 
     /**
-     * 注册服务
+     * 登录
      */
-    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public RegisterOutput register(@RequestBody @Validated RegisterInput input, BindingResult bindingResult) throws Exception {
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public LoginOutput register(@RequestBody @Validated LoginInput input, BindingResult bindingResult) throws Exception {
         paramaterVidation(bindingResult);
-        RegisterOutput result = authroizationService.register(input);
+        LoginOutput result = authroizationService.register(input);
         setSuccess(result);
         return result;
     }
@@ -40,7 +41,7 @@ public class AuthorizationController {
     /**
      * 取得token
      */
-    @PostMapping(value = "/gettoken", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/auth/gettoken", produces = MediaType.APPLICATION_JSON_VALUE)
     public GetTokenOutput getToken(@RequestBody @Validated GetTokenInput input, BindingResult bindingResult) throws Exception {
         paramaterVidation(bindingResult);
         GetTokenOutput result = authroizationService.getToken(input);
@@ -52,7 +53,7 @@ public class AuthorizationController {
     /**
      * 验证token
      */
-    @PostMapping(value = "/verifytoken", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/auth/verifytoken", produces = MediaType.APPLICATION_JSON_VALUE)
     public VerifyTokenOutput verifyToken(@RequestBody @Validated VerifyTokenInput input, BindingResult bindingResult) throws Exception{
         paramaterVidation(bindingResult);
         VerifyTokenOutput result = authroizationService.verifyToken(input);

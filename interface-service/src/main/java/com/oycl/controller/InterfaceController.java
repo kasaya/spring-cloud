@@ -26,7 +26,7 @@ public class InterfaceController implements LogEnable {
     @Autowired
     MainApi mainApi;
 
-    //@RolesAllowed("R06")
+    @RolesAllowed("R01")
     //@PreAuthorize("hasRole('R01')")
     @PostMapping(value = "/getmcode")
     public GetMcodeOutPut getMcode(@RequestBody GetMcodeInput input){

@@ -2,10 +2,11 @@ package com.oycl.service;
 
 
 import com.oycl.input.GetTokenInput;
-import com.oycl.input.RegisterInput;
+import com.oycl.input.LoginInput;
 import com.oycl.input.VerifyTokenInput;
 
 import com.oycl.output.GetTokenOutput;
+import com.oycl.output.LoginOutput;
 import com.oycl.output.RegisterOutput;
 import com.oycl.output.VerifyTokenOutput;
 
@@ -19,7 +20,7 @@ public interface AuthroizationService {
      * @param input
      * @return
      */
-    RegisterOutput register(RegisterInput input) throws Exception;
+    LoginOutput register(LoginInput input) throws Exception;
 
 
     /**

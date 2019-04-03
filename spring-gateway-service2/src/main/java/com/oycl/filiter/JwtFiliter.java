@@ -81,9 +81,9 @@ public class JwtFiliter implements GatewayFilter {
             //TODO: 验证token 有效性
 
 
-            ServerHttpResponse response = exchange.getResponse();
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete();
+//            ServerHttpResponse response = exchange.getResponse();
+//            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+//            return response.setComplete();
 
         }catch (ExpiredJwtException e) {
             // token 超时

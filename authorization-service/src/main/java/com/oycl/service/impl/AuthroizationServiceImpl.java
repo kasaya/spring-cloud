@@ -6,13 +6,14 @@ import com.oycl.common.definitions.Constants;
 import com.oycl.common.exception.CangoAplException;
 import com.oycl.common.util.*;
 import com.oycl.input.GetTokenInput;
-import com.oycl.input.RegisterInput;
+import com.oycl.input.LoginInput;
 import com.oycl.input.VerifyTokenInput;
 
 import com.oycl.orm.mapper.TAuthBaseDao;
 import com.oycl.orm.model.TAuthBase;
 
 import com.oycl.output.GetTokenOutput;
+import com.oycl.output.LoginOutput;
 import com.oycl.output.RegisterOutput;
 import com.oycl.output.VerifyTokenOutput;
 import com.oycl.service.AuthroizationService;
@@ -47,31 +48,31 @@ public class AuthroizationServiceImpl implements AuthroizationService {
     private AESUtil aesUtil = AESUtil.getInstance();
 
     @Override
-    public RegisterOutput register(RegisterInput input) throws Exception {
+    public LoginOutput register(LoginInput input) throws Exception {
         //校验数据
         if (!validateSign(input)) {
             throw new CangoAplException("数据有效性验证失败！");
         }
-        RegisterOutput result = new RegisterOutput();
+        LoginOutput result = new LoginOutput();
         TAuthBase param = new TAuthBase();
-        param.setIpAddress(input.getIpAddress());
-        TAuthBase target = baseDao.selectOne(param);
-        if (target != null) {
-            result.setApiId(target.getApiId());
-            result.setApiSecret(aesUtil.encryptCBC(target.getSecret()));
-        } else {
-            //生成APIID 与 ApiSecret
-            String apiId = CipherUtil.creatApiId("kasaya");
-
-            param.setApiId(apiId);
-            param.setSecret(StringUtil.getUUID());
-            param.setPrincipal(input.getPrincipal());
-            //param.setCreateDateTime(D);
-            baseDao.insert(param);
-            result.setApiId(apiId);
-            String secret = aesUtil.encryptCBC(param.getSecret());
-            result.setApiSecret(secret);
-        }
+//        param.setIpAddress(input.getIpAddress());
+//        TAuthBase target = baseDao.selectOne(param);
+//        if (target != null) {
+//            result.setApiId(target.getApiId());
+//            result.setApiSecret(aesUtil.encryptCBC(target.getSecret()));
+//        } else {
+//            //生成APIID 与 ApiSecret
+//            String apiId = CipherUtil.creatApiId("kasaya");
+//
+//            param.setApiId(apiId);
+//            param.setSecret(StringUtil.getUUID());
+//            param.setPrincipal(input.getPrincipal());
+//            //param.setCreateDateTime(D);
+//            baseDao.insert(param);
+//            result.setApiId(apiId);
+//            String secret = aesUtil.encryptCBC(param.getSecret());
+//            result.setApiSecret(secret);
+//        }
         return result;
     }
 

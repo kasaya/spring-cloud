@@ -16,7 +16,7 @@ public class test {
         UserInfo userInfo = new UserInfo();
         userInfo.setLoginId("a");
         userInfo.setName("b");
-       // userInfo.setAuth(Arrays.asList("R01","R02","R03"));
+        userInfo.setAuth(Arrays.asList("R01","R02","R03"));
         String a = JwtTokenUtil.INSTENS.generateToken(gson.toJson(userInfo));
         System.out.println(a);
 //        Pattern parent = compile("(?<=(\\$\\{))([^\\$\\{\\}]+)");
