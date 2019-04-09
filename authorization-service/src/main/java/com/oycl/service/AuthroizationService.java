@@ -20,7 +20,7 @@ public interface AuthroizationService {
      * @param input
      * @return
      */
-    LoginOutput register(LoginInput input) throws Exception;
+    LoginOutput login(LoginInput input) throws Exception;
 
 
     /**

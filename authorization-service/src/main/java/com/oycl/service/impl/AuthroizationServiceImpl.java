@@ -10,8 +10,10 @@ import com.oycl.input.LoginInput;
 import com.oycl.input.VerifyTokenInput;
 
 import com.oycl.orm.mapper.TAuthBaseDao;
+import com.oycl.orm.mapper.TUserInfoDao;
 import com.oycl.orm.model.TAuthBase;
 
+import com.oycl.orm.model.TUserInfo;
 import com.oycl.output.GetTokenOutput;
 import com.oycl.output.LoginOutput;
 import com.oycl.output.RegisterOutput;
@@ -45,16 +47,19 @@ public class AuthroizationServiceImpl implements AuthroizationService {
     @Autowired
     TAuthBaseDao baseDao;
 
+    @Autowired
+    TUserInfoDao userDao;
+
     private AESUtil aesUtil = AESUtil.getInstance();
 
     @Override
-    public LoginOutput register(LoginInput input) throws Exception {
+    public LoginOutput login(LoginInput input) throws Exception {
         //校验数据
         if (!validateSign(input)) {
             throw new CangoAplException("数据有效性验证失败！");
         }
         LoginOutput result = new LoginOutput();
-        TAuthBase param = new TAuthBase();
+        TUserInfo param = new TUserInfo();
 //        param.setIpAddress(input.getIpAddress());
 //        TAuthBase target = baseDao.selectOne(param);
 //        if (target != null) {
