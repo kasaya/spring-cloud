@@ -25,13 +25,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .formLogin().disable()
-                .httpBasic().disable()
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilterAfter(new JwtTokenAuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class);
+                .httpBasic().disable();
+                //.authorizeRequests()
+                //.anyRequest().authenticated()
+//                .and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .addFilterAfter(new JwtTokenAuthenticationFilter(),
+//                        UsernamePasswordAuthenticationFilter.class);
     }
 }

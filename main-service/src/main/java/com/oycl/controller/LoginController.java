@@ -28,12 +28,7 @@ public class LoginController {
 
     @PostMapping(value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
     public LoginOutput login(@RequestBody LoginInput input) {
-        LoginOutput reslut =  new LoginOutput(); //loginService.login(input);
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        LoginOutput reslut =  loginService.login(input);
         reslut.setResultMessage("success");
         return reslut;
     }
