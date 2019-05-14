@@ -27,6 +27,8 @@ public class ActivitiConfig {
     public ProcessEngine processEngineConfiguration() {
 
         SpringProcessEngineConfiguration configuration = new SpringProcessEngineConfiguration();
+        // StandaloneProcessEngineConfiguration configuration = new StandaloneProcessEngineConfiguration();
+
 
         configuration.setDataSource(dataSource);
 
