@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Endpoint(id = "refresh-gateway")
 public class DynamicRouteBusEndpoint extends AbstractBusEndpoint{
 
-    @Autowired
-    private FileRouteDefinitionRepository fileRouteDefinitionRepository;
+
 
     public DynamicRouteBusEndpoint(ApplicationEventPublisher context, String appId) {
         super(context, appId);
@@ -28,7 +27,7 @@ public class DynamicRouteBusEndpoint extends AbstractBusEndpoint{
 
     @WriteOperation
     public void notifyChanged(){
-//        fileRouteDefinitionRepository.initRoute();
+
         this.publish(new RefreshRoutesApplicationEvent(this,getInstanceId()));
         System.out.println("notifyChanged");
     }

@@ -7,6 +7,7 @@ import com.oycl.filiter.JwtGatewayFilterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinition;
@@ -34,6 +35,9 @@ import static java.util.Collections.synchronizedMap;
  */
 @Component
 public class FileRouteDefinitionRepository implements RouteDefinitionRepository {
+
+    @Value("${route.routeFile}")
+    private String routeFile;
 
     private final Map<String, RouteDefinition> routes = synchronizedMap(new LinkedHashMap<String, RouteDefinition>());
 
@@ -75,7 +79,7 @@ public class FileRouteDefinitionRepository implements RouteDefinitionRepository 
         logger.debug("设置路由FileRouteDefinitionRepository");
         List<RouteDefinition> routeDefinitions = null;
         try {
-            final JsonReader jsonReader = new JsonReader(new FileReader("D:\\project\\myproj\\myTempSpring\\spring-gateway-service2\\src\\main\\resources\\route.json"));
+            final JsonReader jsonReader = new JsonReader(new FileReader(routeFile));
             final Type type = new TypeToken<List<RouteDefinition>>() {}.getType();
             routeDefinitions = gson.fromJson(jsonReader, type);
             if (routeDefinitions.size() > 0) {

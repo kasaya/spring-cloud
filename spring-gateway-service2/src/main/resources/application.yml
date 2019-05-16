@@ -41,7 +41,8 @@ management:
       exposure:
         include: '*'
 
-
+route:
+  routeFile: D:\project\spring-cloud\spring-gateway-service2\src\main\resources\route.json
 
 
 
