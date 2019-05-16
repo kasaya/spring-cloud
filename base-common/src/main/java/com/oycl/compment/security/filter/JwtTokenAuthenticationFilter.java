@@ -44,11 +44,12 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
-    public class CustomUserDetailsService implements UserDetailsService {
+    private class CustomUserDetailsService implements UserDetailsService {
         @Override
         public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
             System.out.println("当前的用户是："+ s);

@@ -5,15 +5,15 @@ spring:
   gateway:
     discovery:
      locator:
-       enabled: true
+       enabled: false #不通过直接通过discover找到server进行配置
 # 直接通过discover找到server进行配置
 #       predicates: [
 #          {'name':'Path','args':{"pattern":"'/'+serviceId +'/**'"}}, #指定路径规则
 #          {'name':'Host','args':{"pattern":"'localhost'"}} #指定host
 #          ]
 #       lower-case-service-id: true
-    filter:
-      - JwtFiliter
+#    filter:
+#      - JwtFiliter
     globalcors:
       cors-configurations:
         '[/**]':
@@ -28,3 +28,16 @@ eureka:
       defaultZone: http://localhost:9090/eureka/
 server:
   port: 9094
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ['gateway','refresh-rr']
+
+
+
+
+
+

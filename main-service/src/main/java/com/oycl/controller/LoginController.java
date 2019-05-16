@@ -38,5 +38,8 @@ public class LoginController {
         retryService.excute();
     }
 
-
+    @PostMapping(value = "/test")
+    public String test(){
+        return  "success";
+    }
 }

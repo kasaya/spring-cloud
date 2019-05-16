@@ -8,23 +8,25 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 通过bean形式配置路径
+ */
 @Configuration
-@EnableDiscoveryClient
 public class CustomRouteLocator {
 
     @Autowired
     JwtFiliter jwtFiliter;
 
-    @Bean
-    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
-        return builder.routes()
-                // 自定义路径 /infc/
-                .route("interface-service",
-                        r->r.path("/**/infc/**")
-                                .filters(f->f.rewritePath("[^\\s]*/infc/(?<segment>.*)","/$\\{segment}").filter(jwtFiliter))
-                        .uri("lb://interface-service"))
-                .build();
-
-    }
+//    @Bean
+//    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
+//        return builder.routes()
+//                // 自定义路径 /infc/
+//                .route("interface-service",
+//                        r->r.path("/**/infc/**")
+//                                .filters(f->f.rewritePath("[^\\s]*/infc/(?<segment>.*)","/$\\{segment}").filter(jwtFiliter))
+//                        .uri("lb://interface-service"))
+//                .build();
+//
+//    }
 
 }

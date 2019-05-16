@@ -39,4 +39,9 @@ public class InterfaceController implements LogEnable {
         LoginOutput output =  mainApi.login(input);
          return output.getResultMessage();
     }
+
+    @PostMapping(value = "/test")
+    public String test(){
+        return "success";
+    }
 }
