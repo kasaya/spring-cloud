@@ -5,12 +5,18 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.core.io.buffer.NettyDataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -27,6 +33,7 @@ import java.util.List;
  */
 @Component
 public class JwtGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtGatewayFilterFactory.Config> {
+
 
     public JwtGatewayFilterFactory(){
         super(Config.class);
@@ -87,8 +94,15 @@ public class JwtGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtGat
 
                 logger.warn("调用正常");
 
-
+                DefaultDataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
                 //TODO: 验证token 有效性
+                ServerHttpResponse response = exchange.getResponse();
+                Flux<DataBuffer> message = Flux.just(dataBufferFactory.wrap((new String("{'a':'b'}").getBytes())));
+                response.writeWith(message);
+                response.getHeaders().add("Context-type","text/html;charset=utf-8");
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return response.setComplete();
+
 
 
 //            ServerHttpResponse response = exchange.getResponse();

@@ -42,7 +42,7 @@ management:
         include: '*'
 
 route:
-  routeFile: D:\project\spring-cloud\spring-gateway-service2\src\main\resources\route.json
+  routeFile: D:\project\myproj\myTempSpring\spring-gateway-service2\src\main\resources\route.json
 
 
 
