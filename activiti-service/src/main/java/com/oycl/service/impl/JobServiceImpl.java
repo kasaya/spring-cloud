@@ -7,6 +7,7 @@ import com.oycl.entity.InputParam;
 import com.oycl.entity.OutputParam;
 import com.oycl.entity.TaskModel;
 import com.oycl.service.JobService;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -19,7 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,9 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     private Gson gson;
+
+    @Autowired
+    private RepositoryService repositoryService;
 
 
     /**
@@ -64,18 +70,18 @@ public class JobServiceImpl implements JobService {
         //使用流程定义的key启动流程实例，key对应helloworld.bpmn文件中id的属性值，使用key值启动，默认是按照最新版本的流程定义启动
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(Job.JOB.getJobKey(inputParam.getJobId()), map);
 
-        // 获取流程启动产生的taskId
-        Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
-
-        taskService.claim(task.getId(), inputParam.getUserId());
-
-        taskService.complete(task.getId());
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("taskId", task.getId());
-        jsonObject.addProperty("processInstanceId",task.getProcessInstanceId());
-
-        output.setResultStrObj(gson.toJson(jsonObject));
+//        // 获取流程启动产生的taskId
+//        Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
+//
+//        taskService.claim(task.getId(), inputParam.getUserId());
+//
+//        taskService.complete(task.getId());
+//
+//        JsonObject jsonObject = new JsonObject();
+//        jsonObject.addProperty("taskId", task.getId());
+//        jsonObject.addProperty("processInstanceId",task.getProcessInstanceId());
+//
+//        output.setResultStrObj(gson.toJson(jsonObject));
 
 
         logger.info("启动流程实例成功:{}", instance);
@@ -95,7 +101,7 @@ public class JobServiceImpl implements JobService {
     public String showTask(String userId,String group) {
         TaskQuery taskQuery = null;
         if(userId != null){
-            taskQuery = taskService.createTaskQuery().taskCandidateOrAssigned(userId);
+            taskQuery = taskService.createTaskQuery().taskAssignee(userId);
         }
         if(group != null){
             if(taskQuery == null){
@@ -157,6 +163,18 @@ public class JobServiceImpl implements JobService {
         return output;
     }
 
+    /**
+     * 部署新流程
+     * @param file
+     * @param fileName
+     */
+    public void deployment(MultipartFile file, String fileName){
+        try {
+            repositoryService.createDeployment().addInputStream(fileName, file.getInputStream()).deploy();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

@@ -26,8 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {/*extends WebSecurityConfigurerAdapter {
 
     private Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
@@ -43,5 +42,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    }*/
 }

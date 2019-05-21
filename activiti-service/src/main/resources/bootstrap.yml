@@ -8,9 +8,6 @@ spring:
       name: activiti-service
   main:
     allow-bean-definition-overriding: true
-  activiti:
-    db-history-used: true
-    database-schema: activity
 #eureka 注册中心配置
 eureka:
   client:

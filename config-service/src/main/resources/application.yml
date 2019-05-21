@@ -53,7 +53,8 @@ spring:
           clone-on-start: true
           force-pull: true
           timeout: 300 #链接超时时间
-          search-locations: file:///C:/Users/cango/config-server-file/{application}
+          search-locations: file:///D:/project/config-file/{application}
+          #search-locations: file:///C:/Users/cango/config-server-file/{application}
           #search-locations: ${user.home}/config-server-file/{application}
           #resource下
           #         search-locations: classpath:/scf-config/
