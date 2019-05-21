@@ -1,5 +1,7 @@
 package com.oycl.entity;
 
+import java.util.Map;
+
 public class TaskModel {
 
     private String taskId;
@@ -9,14 +11,16 @@ public class TaskModel {
     private String instanceId;
     private String definitionId;
 
-    private String param;
+    /**用户参数*/
+    private Map<String, Object> params;
 
-    public String getParam() {
-        return param;
+
+    public Map<String, Object> getParams() {
+        return params;
     }
 
-    public void setParam(String param) {
-        this.param = param;
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
     }
 
     public String getTaskId() {

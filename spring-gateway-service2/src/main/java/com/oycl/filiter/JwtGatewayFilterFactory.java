@@ -3,24 +3,25 @@ package com.oycl.filiter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferFactory;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
-import org.springframework.core.io.buffer.NettyDataBufferFactory;
+import org.springframework.core.io.buffer.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -94,14 +95,41 @@ public class JwtGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtGat
 
                 logger.warn("调用正常");
 
-                DefaultDataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
-                //TODO: 验证token 有效性
                 ServerHttpResponse response = exchange.getResponse();
+                DataBufferFactory dataBufferFactory = response.bufferFactory();
+
+                ServerHttpResponseDecorator decoratedResponse = new ServerHttpResponseDecorator(response) {
+                    @Override
+                    public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
+                        if (body instanceof Flux) {
+                            Flux<? extends DataBuffer> fluxBody = (Flux<? extends DataBuffer>) body;
+                            return super.writeWith(fluxBody.map(dataBuffer -> {
+                                // probably should reuse buffers
+                                byte[] content = new byte[dataBuffer.readableByteCount()];
+                                dataBuffer.read(content);
+                                //释放掉内存
+                                DataBufferUtils.release(dataBuffer);
+                                String s = new String(content, Charset.forName("UTF-8"));
+                                s += "UNAUTHORIZED";
+                                //TODO，s就是response的值，想修改、查看就随意而为了
+                                byte[] uppedContent = new String(content, Charset.forName("UTF-8")).getBytes();
+                                return dataBufferFactory.wrap(uppedContent);
+                            }));
+                        }
+                        // if body is not a flux. never got there.
+                        return super.writeWith(body);
+                    }
+                };
+
+
+                //TODO: 验证token 有效性
+
                 Flux<DataBuffer> message = Flux.just(dataBufferFactory.wrap((new String("{'a':'b'}").getBytes())));
                 response.writeWith(message);
                 response.getHeaders().add("Context-type","text/html;charset=utf-8");
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
                 return response.setComplete();
+
 
 
 
