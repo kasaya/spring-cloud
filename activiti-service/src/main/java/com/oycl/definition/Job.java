@@ -18,6 +18,7 @@ public enum Job {
     Job(){
         jobType.put("10","day_off");
         jobType.put("11","ask_day_off");
+        jobType.put("12","reimburse");
     }
 
     public String getJobKey(String jobId){

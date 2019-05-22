@@ -16,5 +16,12 @@ public interface JobService {
 
     String showTask(String user, String group);
 
-    OutputParam approve(InputParam inputParam);
+    OutputParam complete(InputParam inputParam);
+
+    /**
+     * 认领任务
+     * @param inputParam
+     * @return
+     */
+    OutputParam claim(InputParam inputParam);
 }

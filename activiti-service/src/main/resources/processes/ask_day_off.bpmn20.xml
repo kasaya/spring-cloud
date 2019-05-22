@@ -5,7 +5,19 @@
     <startEvent id="startEvent1"></startEvent>
     <userTask id="attendance_officer" name="考勤专员" activiti:candidateGroups="AO"></userTask>
     <sequenceFlow id="sid-4D43C47D-97E7-45F4-9907-103B08FF5158" sourceRef="startEvent1" targetRef="attendance_officer"></sequenceFlow>
-    <serviceTask id="update_status_service" name="设置审批"></serviceTask>
+    <serviceTask id="update_status_service" name="设置假期" activiti:class="org.cango.activity.service.impl.JumpService">
+      <extensionElements>
+        <activiti:field name="classname">
+          <activiti:string><![CDATA[interfaceService]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="function">
+          <activiti:string><![CDATA[getCode]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param">
+          <activiti:string><![CDATA[day]]></activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
     <exclusiveGateway id="is_approve"></exclusiveGateway>
     <endEvent id="sid-FAB311F1-6183-4C4E-8291-97A364EEB8BB"></endEvent>
     <userTask id="SUP" name="主管" activiti:candidateGroups="SUP"></userTask>
@@ -13,49 +25,53 @@
     <userTask id="HRM" name="人事经理" activiti:candidateGroups="HRM"></userTask>
     <exclusiveGateway id="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA"></exclusiveGateway>
     <userTask id="GM" name="总经理" activiti:candidateGroups="GM"></userTask>
-    <serviceTask id="vacation_service" name="假期处理" activiti:class=""></serviceTask>
+    <serviceTask id="vacation_service" name="假期处理"></serviceTask>
     <sequenceFlow id="sid-85865CEE-2892-4CA0-9C40-DF65C8078B43" sourceRef="vacation_service" targetRef="sid-FAB311F1-6183-4C4E-8291-97A364EEB8BB"></sequenceFlow>
     <exclusiveGateway id="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F"></exclusiveGateway>
     <sequenceFlow id="sid-FA40FE9B-8D06-40B2-A576-8DFEFA5E696E" sourceRef="SUP" targetRef="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F"></sequenceFlow>
     <sequenceFlow id="sid-F671ED57-E371-4022-97AF-70E1D75F8153" sourceRef="HRM" targetRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA"></sequenceFlow>
-    <userTask id="modify" name="修改"></userTask>
+    <userTask id="modify" name="修改" activiti:assignee="${applyUser}">
+      <extensionElements>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
     <exclusiveGateway id="sid-D7108679-028A-4FAE-B031-31E144C8B5D6"></exclusiveGateway>
     <sequenceFlow id="sid-FA04AB4A-89D0-43BA-B2F8-51EDE19BB133" sourceRef="GM" targetRef="sid-D7108679-028A-4FAE-B031-31E144C8B5D6"></sequenceFlow>
     <exclusiveGateway id="sid-B7073689-A488-4231-A176-D5836AEF5C00"></exclusiveGateway>
     <sequenceFlow id="sid-87CBC7C4-68B5-4E56-947C-7ECBE1A002A8" sourceRef="modify" targetRef="sid-B7073689-A488-4231-A176-D5836AEF5C00"></sequenceFlow>
     <sequenceFlow id="sid-034458F7-A0AA-469F-8E83-7FA40D82DEEB" sourceRef="attendance_officer" targetRef="is_approve"></sequenceFlow>
     <sequenceFlow id="sid-F6703993-FB7E-482A-9845-C1C88EBC4975" name="同意" sourceRef="is_approve" targetRef="update_status_service">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approve}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${aoApprove}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-D7C52C57-BF66-4D05-A0C0-4CF5ACCAC970" name="驳回" sourceRef="is_approve" targetRef="modify">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approve}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-4F498511-F427-4415-9821-031D682A4BC0" name="同意" sourceRef="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F" targetRef="HRM">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approve}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!aoApprove}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-993C57F9-7856-4DBF-8DC1-1E83E41A095C" name="驳回" sourceRef="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F" targetRef="modify">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approve}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!supApprove}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="more_than_2_days" name="同意 且 大于 2天" sourceRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA" targetRef="GM">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approve&days>2}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="less_than_2_days" name="同意 且 小于等于 2 天" sourceRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA" targetRef="vacation_service">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approve&days<=2}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C" name="提交" sourceRef="sid-B7073689-A488-4231-A176-D5836AEF5C00" targetRef="attendance_officer">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action='submit'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-946C2AA4-4467-499A-8783-2C03D67D131D" name="废弃" sourceRef="sid-B7073689-A488-4231-A176-D5836AEF5C00" targetRef="sid-FAB311F1-6183-4C4E-8291-97A364EEB8BB">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action='cancel'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-F387A25E-D703-459E-894F-32F78ACC2221" name="驳回" sourceRef="sid-D7108679-028A-4FAE-B031-31E144C8B5D6" targetRef="modify">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approve}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-FA2D7FDF-DC6E-43A9-8138-CA3B3A6D1224" name="同意" sourceRef="sid-D7108679-028A-4FAE-B031-31E144C8B5D6" targetRef="vacation_service">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approve}]]></conditionExpression>
+    <sequenceFlow id="sid-4F498511-F427-4415-9821-031D682A4BC0" name="同意" sourceRef="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F" targetRef="HRM">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${supApprove}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-5D4E5D48-751A-46D3-8C01-9B3CAA2EB9D5" name="驳回" sourceRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA" targetRef="modify">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approve}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!hrmApprove}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="less_than_2_days" name="同意 且 小于等于 2 天" sourceRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA" targetRef="vacation_service">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrmApprove&days<=2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="more_than_2_days" name="同意 且 大于 2天" sourceRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA" targetRef="GM">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrmApprove&days>2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-FA2D7FDF-DC6E-43A9-8138-CA3B3A6D1224" name="同意" sourceRef="sid-D7108679-028A-4FAE-B031-31E144C8B5D6" targetRef="vacation_service">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${gmApprove}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-F387A25E-D703-459E-894F-32F78ACC2221" name="驳回" sourceRef="sid-D7108679-028A-4FAE-B031-31E144C8B5D6" targetRef="modify">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!gmApprove}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-946C2AA4-4467-499A-8783-2C03D67D131D" name="废弃" sourceRef="sid-B7073689-A488-4231-A176-D5836AEF5C00" targetRef="sid-FAB311F1-6183-4C4E-8291-97A364EEB8BB">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action =='cancel'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C" name="提交" sourceRef="sid-B7073689-A488-4231-A176-D5836AEF5C00" targetRef="attendance_officer">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action =='submit'}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_ask_day_off">
@@ -111,8 +127,8 @@
         <omgdi:waypoint x="370.00000000000006" y="130.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F387A25E-D703-459E-894F-32F78ACC2221" id="BPMNEdge_sid-F387A25E-D703-459E-894F-32F78ACC2221">
-        <omgdi:waypoint x="682.625" y="792.375"></omgdi:waypoint>
-        <omgdi:waypoint x="682.625" y="850.0"></omgdi:waypoint>
+        <omgdi:waypoint x="680.5194805194806" y="794.4805194805194"></omgdi:waypoint>
+        <omgdi:waypoint x="682.0" y="850.0"></omgdi:waypoint>
         <omgdi:waypoint x="275.0" y="850.0"></omgdi:waypoint>
         <omgdi:waypoint x="275.0" y="465.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
@@ -130,7 +146,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-D7C52C57-BF66-4D05-A0C0-4CF5ACCAC970" id="BPMNEdge_sid-D7C52C57-BF66-4D05-A0C0-4CF5ACCAC970">
         <omgdi:waypoint x="390.00000000000006" y="150.0"></omgdi:waypoint>
-        <omgdi:waypoint x="390.00000000000006" y="425.0"></omgdi:waypoint>
+        <omgdi:waypoint x="390.0" y="425.0"></omgdi:waypoint>
         <omgdi:waypoint x="325.0" y="425.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-4F498511-F427-4415-9821-031D682A4BC0" id="BPMNEdge_sid-4F498511-F427-4415-9821-031D682A4BC0">
@@ -145,14 +161,14 @@
         <omgdi:waypoint x="595.0" y="775.0"></omgdi:waypoint>
         <omgdi:waypoint x="660.0" y="775.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="more_than_2_days" id="BPMNEdge_more_than_2_days">
-        <omgdi:waypoint x="545.0" y="665.0"></omgdi:waypoint>
-        <omgdi:waypoint x="545.0" y="735.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="less_than_2_days" id="BPMNEdge_less_than_2_days">
         <omgdi:waypoint x="565.0" y="645.0"></omgdi:waypoint>
         <omgdi:waypoint x="815.0" y="645.0"></omgdi:waypoint>
         <omgdi:waypoint x="815.0" y="735.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="more_than_2_days" id="BPMNEdge_more_than_2_days">
+        <omgdi:waypoint x="545.0" y="665.0"></omgdi:waypoint>
+        <omgdi:waypoint x="545.0" y="735.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-FA40FE9B-8D06-40B2-A576-8DFEFA5E696E" id="BPMNEdge_sid-FA40FE9B-8D06-40B2-A576-8DFEFA5E696E">
         <omgdi:waypoint x="545.0" y="335.0"></omgdi:waypoint>
@@ -162,16 +178,16 @@
         <omgdi:waypoint x="545.0" y="560.0"></omgdi:waypoint>
         <omgdi:waypoint x="545.0" y="625.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C" id="BPMNEdge_sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C">
-        <omgdi:waypoint x="275.0" y="295.0"></omgdi:waypoint>
-        <omgdi:waypoint x="275.0" y="170.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-946C2AA4-4467-499A-8783-2C03D67D131D" id="BPMNEdge_sid-946C2AA4-4467-499A-8783-2C03D67D131D">
         <omgdi:waypoint x="255.0" y="315.0"></omgdi:waypoint>
         <omgdi:waypoint x="191.0" y="315.0"></omgdi:waypoint>
         <omgdi:waypoint x="191.0" y="904.0"></omgdi:waypoint>
         <omgdi:waypoint x="989.0" y="904.0"></omgdi:waypoint>
         <omgdi:waypoint x="989.0" y="789.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C" id="BPMNEdge_sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C">
+        <omgdi:waypoint x="275.0" y="295.0"></omgdi:waypoint>
+        <omgdi:waypoint x="275.0" y="170.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-5D4E5D48-751A-46D3-8C01-9B3CAA2EB9D5" id="BPMNEdge_sid-5D4E5D48-751A-46D3-8C01-9B3CAA2EB9D5">
         <omgdi:waypoint x="525.0" y="645.0"></omgdi:waypoint>

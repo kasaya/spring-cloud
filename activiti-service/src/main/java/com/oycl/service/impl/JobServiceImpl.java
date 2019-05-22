@@ -10,6 +10,7 @@ import com.oycl.service.JobService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
@@ -20,12 +21,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -70,18 +72,14 @@ public class JobServiceImpl implements JobService {
         //使用流程定义的key启动流程实例，key对应helloworld.bpmn文件中id的属性值，使用key值启动，默认是按照最新版本的流程定义启动
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(Job.JOB.getJobKey(inputParam.getJobId()), map);
 
-//        // 获取流程启动产生的taskId
-//        Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
-//
-//        taskService.claim(task.getId(), inputParam.getUserId());
-//
-//        taskService.complete(task.getId());
-//
-//        JsonObject jsonObject = new JsonObject();
-//        jsonObject.addProperty("taskId", task.getId());
-//        jsonObject.addProperty("processInstanceId",task.getProcessInstanceId());
-//
-//        output.setResultStrObj(gson.toJson(jsonObject));
+        // 获取流程启动产生的taskId
+        Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("taskId", task.getId());
+        jsonObject.addProperty("processInstanceId",task.getProcessInstanceId());
+
+        output.setResultStrObj(gson.toJson(jsonObject));
 
 
         logger.info("启动流程实例成功:{}", instance);
@@ -104,11 +102,7 @@ public class JobServiceImpl implements JobService {
             taskQuery = taskService.createTaskQuery().taskAssignee(userId);
         }
         if(group != null){
-            if(taskQuery == null){
-                taskQuery = taskService.createTaskQuery().taskCandidateGroup(group);
-            }else{
-                taskQuery =  taskQuery.taskCandidateGroup(group);
-            }
+            taskQuery = taskService.createTaskQuery().taskCandidateGroup(group);
         }
         List<Task> list = taskQuery.orderByTaskCreateTime().desc().list();
         if (CollectionUtils.isEmpty(list)) {
@@ -135,12 +129,31 @@ public class JobServiceImpl implements JobService {
     }
 
     /**
+     * 认领任务
+     * @param inputParam
+     * @return
+     */
+    @Override
+    public OutputParam claim(InputParam inputParam){
+        OutputParam output = new OutputParam();
+        Task task = taskService.createTaskQuery().taskId(inputParam.getTaskId()).singleResult();
+        if (task == null) {
+            output.setResult("fail");
+            output.setMessage("must required task id ");
+            logger.info("审核任务ID:{}查询到任务为空！", inputParam.getTaskId());
+            return output;
+        }
+        taskService.claim(inputParam.getTaskId(), inputParam.getUserId());
+        return output;
+    }
+
+    /**
      * 分支走向
      * @param inputParam
      * @return
      */
     @Override
-    public OutputParam approve(InputParam inputParam){
+    public OutputParam complete(InputParam inputParam){
         OutputParam output = new OutputParam();
         Task task = taskService.createTaskQuery().taskId(inputParam.getTaskId()).singleResult();
         if (task == null) {
@@ -150,10 +163,16 @@ public class JobServiceImpl implements JobService {
             return output;
         }
 
-        String json = inputParam.getJsonParam();
+        //设置局部动作变量
+        String actionJson = inputParam.getActionParam();
+        if(actionJson != null && !actionJson.equals("")){
+            Map<String, Object> map = gson.fromJson(actionJson, Map.class);
+            taskService.setVariablesLocal(task.getId(),map);
+        }
+
         //分支走向
         if(inputParam.getJsonParam() != null && !inputParam.getJsonParam().equals("")){
-            Map<String, Object> map = gson.fromJson(json, Map.class);
+            Map<String, Object> map = gson.fromJson(inputParam.getJsonParam(), Map.class);
             taskService.complete(inputParam.getTaskId(), map);
         }else{
             //非分支，单路线走向
@@ -163,18 +182,42 @@ public class JobServiceImpl implements JobService {
         return output;
     }
 
+
     /**
      * 部署新流程
-     * @param file
      * @param fileName
      */
-    public void deployment(MultipartFile file, String fileName){
+    public OutputParam deploymentZip(String fileName){
+        OutputParam output = new OutputParam();
         try {
-            repositoryService.createDeployment().addInputStream(fileName, file.getInputStream()).deploy();
+            URL uri =  this.getClass().getClassLoader().getResource("/processes/"+fileName);
+            if(uri != null){
+                output.setResult("fail");
+                output.setMessage("zip file isn`t exist ");
+                logger.info("部署流程:{}文件不存在！", fileName);
+            }
+            ZipInputStream inputStream = new ZipInputStream(uri.openStream());
+            repositoryService.createDeployment().addZipInputStream(inputStream).deploy();
         } catch (IOException e) {
+            output.setResult("fail");
+            output.setMessage(e.getMessage());
             e.printStackTrace();
         }
+        return output;
     }
+
+    /**
+     * 删除流程定义
+     * @param inputParam
+     */
+    public void deleteProcess(InputParam inputParam){
+      ProcessDefinition definition =  repositoryService.createProcessDefinitionQuery().processDefinitionKey(Job.JOB.getJobKey(inputParam.getJobId())).singleResult();
+      repositoryService.deleteDeployment(definition.getDeploymentId());
+    }
+
+
+
+
 
 
 

@@ -1,13 +1,9 @@
 package com.oycl.controller;
 
 
-
-import com.oycl.entity.InputParam;
 import com.oycl.service.ShowTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,11 +16,11 @@ public class ShowProcess {
     @Autowired
     ShowTaskService showTaskService;
 
-    @PostMapping(value = "/showImg", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public void startJob(HttpServletResponse response, @RequestBody InputParam inputParam){
+    @RequestMapping(value = "/showImg")
+    public void startJob(HttpServletResponse response, String instanceId){
         InputStream imageStream = null;
         try {
-            imageStream = showTaskService.ShowImg(inputParam);
+            imageStream = showTaskService.ShowImg(instanceId);
             if(imageStream == null){
                 throw new Exception();
             }

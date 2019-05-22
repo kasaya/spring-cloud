@@ -1,5 +1,6 @@
 package com.oycl.controller;
 
+
 import com.oycl.entity.InputParam;
 import com.oycl.entity.OutputParam;
 import com.oycl.service.JobService;
@@ -25,10 +26,14 @@ public class StartJob {
 
     @PostMapping(value = "/approve", produces =  MediaType.APPLICATION_JSON_VALUE)
     public OutputParam approve(@RequestBody InputParam inputParam){
-        return jobService.approve(inputParam);
+        return jobService.complete(inputParam);
     }
     @PostMapping(value = "/showTask", produces =  MediaType.APPLICATION_JSON_VALUE)
     public String showTask(@RequestBody InputParam inputParam){
         return jobService.showTask(inputParam.getUserId(), inputParam.getGroup());
+    }
+    @PostMapping(value = "/claimTask", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public OutputParam claim(@RequestBody InputParam inputParam){
+        return jobService.claim(inputParam);
     }
 }

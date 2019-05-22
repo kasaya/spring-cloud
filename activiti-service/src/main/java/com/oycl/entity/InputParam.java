@@ -9,6 +9,7 @@ public class InputParam {
     private String jobId;
     private String processInstanceId;
     private String jsonParam;
+    private String actionParam;
 
     public String getProcessInstanceId() {
         return processInstanceId;
@@ -56,5 +57,13 @@ public class InputParam {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public String getActionParam() {
+        return actionParam;
+    }
+
+    public void setActionParam(String actionParam) {
+        this.actionParam = actionParam;
     }
 }

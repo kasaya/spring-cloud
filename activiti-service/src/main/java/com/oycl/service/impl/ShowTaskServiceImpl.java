@@ -1,7 +1,6 @@
 package com.oycl.service.impl;
 
 import com.google.gson.Gson;
-import com.oycl.entity.InputParam;
 import com.oycl.service.ShowTaskService;
 import com.oycl.util.ActivitiUtils;
 import org.activiti.bpmn.model.BpmnModel;
@@ -59,12 +58,12 @@ public class ShowTaskServiceImpl implements ShowTaskService {
     private static final Logger logger = LoggerFactory.getLogger(ShowTaskServiceImpl.class);
 
     @Override
-    public InputStream ShowImg(InputParam inputParam){
+    public InputStream ShowImg(String instanceId){
 
         InputStream imageStream = null;
 
-        logger.info("查看完整流程图！流程实例ID:{}", inputParam.getProcessInstanceId());
-        if(StringUtils.isBlank(inputParam.getProcessInstanceId())){
+        logger.info("查看完整流程图！流程实例ID:{}", instanceId);
+        if(StringUtils.isBlank(instanceId)){
             return null;
         }
 
@@ -72,9 +71,9 @@ public class ShowTaskServiceImpl implements ShowTaskService {
          * 获取流程实例
          */
         HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
-                .processInstanceId(inputParam.getProcessInstanceId()).singleResult();
+                .processInstanceId(instanceId).singleResult();
         if(processInstance == null) {
-            logger.error("流程实例ID:{}没查询到流程实例！", inputParam.getProcessInstanceId());
+            logger.error("流程实例ID:{}没查询到流程实例！", instanceId);
             return null;
         }
 
@@ -86,11 +85,11 @@ public class ShowTaskServiceImpl implements ShowTaskService {
 		 *  获取流程历史中已执行节点，并按照节点在流程中执行先后顺序排序
 		 */
         // 构造历史流程查询
-        HistoricActivityInstanceQuery historyInstanceQuery = historyService.createHistoricActivityInstanceQuery().processInstanceId(inputParam.getProcessInstanceId());
+        HistoricActivityInstanceQuery historyInstanceQuery = historyService.createHistoricActivityInstanceQuery().processInstanceId(instanceId);
         // 查询历史节点
         List<HistoricActivityInstance> historicActivityInstanceList = historyInstanceQuery.orderByHistoricActivityInstanceStartTime().asc().list();
         if(historicActivityInstanceList == null || historicActivityInstanceList.size() == 0) {
-            logger.info("流程实例ID:{}没有历史节点信息！", inputParam.getProcessInstanceId());
+            logger.info("流程实例ID:{}没有历史节点信息！", instanceId);
             imageStream = processDiagramGenerator.generateDiagram(bpmnModel, null, null, "宋体", "微软雅黑", "黑体", true, "png");
             return imageStream;
         }
