@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
-  <process id="ask_day_off" name="请假" isExecutable="true">
+  <process id="ask_day_off" name="请假" isExecutable="true" activiti:initiator="applyUserId">
     <documentation>请假流程</documentation>
     <startEvent id="startEvent1"></startEvent>
     <userTask id="attendance_officer" name="考勤专员" activiti:candidateGroups="AO"></userTask>
     <sequenceFlow id="sid-4D43C47D-97E7-45F4-9907-103B08FF5158" sourceRef="startEvent1" targetRef="attendance_officer"></sequenceFlow>
-    <serviceTask id="update_status_service" name="设置假期" activiti:class="org.cango.activity.service.impl.JumpService">
+    <serviceTask id="update_status_service" name="设置假期" activiti:class="com.oycl.service.impl.JumpService">
       <extensionElements>
         <activiti:field name="classname">
           <activiti:string><![CDATA[interfaceService]]></activiti:string>
@@ -30,7 +30,7 @@
     <exclusiveGateway id="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F"></exclusiveGateway>
     <sequenceFlow id="sid-FA40FE9B-8D06-40B2-A576-8DFEFA5E696E" sourceRef="SUP" targetRef="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F"></sequenceFlow>
     <sequenceFlow id="sid-F671ED57-E371-4022-97AF-70E1D75F8153" sourceRef="HRM" targetRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA"></sequenceFlow>
-    <userTask id="modify" name="修改" activiti:assignee="${applyUser}">
+    <userTask id="modify" name="修改" activiti:assignee="${applyUserId}">
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>

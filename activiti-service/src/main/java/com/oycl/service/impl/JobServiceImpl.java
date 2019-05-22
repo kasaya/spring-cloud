@@ -51,6 +51,8 @@ public class JobServiceImpl implements JobService {
     private RepositoryService repositoryService;
 
 
+
+
     /**
      * 开启任务
      * @param inputParam 开启任务
@@ -70,7 +72,9 @@ public class JobServiceImpl implements JobService {
         String json = inputParam.getJsonParam();
         Map<String, Object> map = gson.fromJson(json, Map.class);
         //使用流程定义的key启动流程实例，key对应helloworld.bpmn文件中id的属性值，使用key值启动，默认是按照最新版本的流程定义启动
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey(Job.JOB.getJobKey(inputParam.getJobId()), map);
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(Job.JOB.getJobKey(inputParam.getJobId())
+                ,inputParam.getBusinessKey()
+                ,map);
 
         // 获取流程启动产生的taskId
         Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
@@ -112,7 +116,8 @@ public class JobServiceImpl implements JobService {
 
         list.forEach(item -> {
             //取得流程变量
-            Map<String, Object> map =  runtimeService.getVariables(item.getExecutionId());
+            Map<String, Object> map =  taskService.getVariables(item.getId());
+           // Map<String, Object> map =  runtimeService.getVariables(item.getExecutionId());
             TaskModel entity = new TaskModel();
             entity.setAssignee(item.getAssignee());
             entity.setCreateTime(item.getCreateTime().toString());
@@ -173,11 +178,10 @@ public class JobServiceImpl implements JobService {
         //分支走向
         if(inputParam.getJsonParam() != null && !inputParam.getJsonParam().equals("")){
             Map<String, Object> map = gson.fromJson(inputParam.getJsonParam(), Map.class);
-            taskService.complete(inputParam.getTaskId(), map);
-        }else{
-            //非分支，单路线走向
-            taskService.complete(inputParam.getTaskId());
+            taskService.setVariables(inputParam.getTaskId(), map);
         }
+
+        taskService.complete(inputParam.getTaskId());
 
         return output;
     }
@@ -213,6 +217,8 @@ public class JobServiceImpl implements JobService {
     public void deleteProcess(InputParam inputParam){
       ProcessDefinition definition =  repositoryService.createProcessDefinitionQuery().processDefinitionKey(Job.JOB.getJobKey(inputParam.getJobId())).singleResult();
       repositoryService.deleteDeployment(definition.getDeploymentId());
+      //级联删除
+        //repositoryService.deleteDeployment(definition.getDeploymentId(), true);
     }
 
 

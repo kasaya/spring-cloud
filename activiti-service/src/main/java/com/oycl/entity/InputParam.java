@@ -2,6 +2,9 @@ package com.oycl.entity;
 
 public class InputParam {
 
+    /**业务Key*/
+    private String businessKey;
+
     private String userId;
     private String group;
     private String taskId;
@@ -65,5 +68,13 @@ public class InputParam {
 
     public void setActionParam(String actionParam) {
         this.actionParam = actionParam;
+    }
+
+    public String getBusinessKey() {
+        return businessKey;
+    }
+
+    public void setBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
     }
 }
