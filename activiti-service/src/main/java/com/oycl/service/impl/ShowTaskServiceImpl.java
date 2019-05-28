@@ -8,9 +8,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricActivityInstanceQuery;
-import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.*;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.image.ProcessDiagramGenerator;
@@ -22,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,6 +106,61 @@ public class ShowTaskServiceImpl implements ShowTaskService {
         imageStream = processDiagramGenerator.generateDiagram(bpmnModel, executedActivityIdList, flowIds, "宋体", "微软雅黑", "黑体", true, "png");
 
         return imageStream;
+    }
+
+    @Override
+    public String showFullHistory(String instanceId) {
+
+        logger.info("查看完整流程图！流程实例ID:{}", instanceId);
+        if(StringUtils.isBlank(instanceId)){
+            return null;
+        }
+
+        /**
+         * 获取流程实例
+         */
+        HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
+                .processInstanceId(instanceId).singleResult();
+        if(processInstance == null) {
+            logger.error("流程实例ID:{}没查询到流程实例！", instanceId);
+            return null;
+        }
+
+        // 构造历史流程查询
+        HistoricActivityInstanceQuery historyInstanceQuery = historyService.createHistoricActivityInstanceQuery().processInstanceId(instanceId);
+        // 查询历史节点
+        List<HistoricActivityInstance> historicActivityInstanceList = historyInstanceQuery.orderByHistoricActivityInstanceStartTime().asc().list();
+        List<ProcessHistoryModel>  models = new ArrayList<>();
+        if(historicActivityInstanceList.size() > 0){
+            historicActivityInstanceList.forEach(instance->{
+                if(instance.getTaskId() != null){
+
+                    HistoricTaskInstance task =  historyService.createHistoricTaskInstanceQuery().taskId(instance.getTaskId()).includeTaskLocalVariables().singleResult();
+                    ProcessHistoryModel model = new ProcessHistoryModel();
+                    model.setAssignee(instance.getAssignee());
+                    model.setStartTime(instance.getStartTime());
+                    model.setEndTime(instance.getEndTime());
+                    model.setStatus(instance.getEndTime()!=null?"已完成":"审批中");
+                    model.setActiveName(instance.getActivityName());
+                    model.setProcessInstanceId(instance.getId());
+                    List<HistoricIdentityLink> list = historyService.getHistoricIdentityLinksForTask(task.getId());
+                    for(HistoricIdentityLink item : list){
+                        if(item.getType().equals("candidate")){
+                            model.setGroup(item.getGroupId());
+                            break;
+                        }
+                    }
+                    if(task != null){
+                        model.setParams(task.getTaskLocalVariables());
+                    }
+                    model.setDeleteReason(instance.getDeleteReason());
+                    models.add(model);
+
+                }
+
+            });
+        }
+        return gson.toJson(models);
     }
 
 

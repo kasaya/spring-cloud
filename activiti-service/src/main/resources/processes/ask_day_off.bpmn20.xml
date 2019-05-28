@@ -5,13 +5,10 @@
     <startEvent id="startEvent1"></startEvent>
     <userTask id="attendance_officer" name="考勤专员" activiti:candidateGroups="AO"></userTask>
     <sequenceFlow id="sid-4D43C47D-97E7-45F4-9907-103B08FF5158" sourceRef="startEvent1" targetRef="attendance_officer"></sequenceFlow>
-    <serviceTask id="update_status_service" name="设置假期" activiti:class="com.oycl.service.impl.JumpService">
+    <serviceTask id="update_status_service" name="设置假期" activiti:delegateExpression="${jumpService}">
       <extensionElements>
-        <activiti:field name="classname">
-          <activiti:string><![CDATA[interfaceService]]></activiti:string>
-        </activiti:field>
-        <activiti:field name="function">
-          <activiti:string><![CDATA[getCode]]></activiti:string>
+        <activiti:field name="restUrl">
+          <activiti:string><![CDATA[http://stores/setDay]]></activiti:string>
         </activiti:field>
         <activiti:field name="param">
           <activiti:string><![CDATA[day]]></activiti:string>
@@ -25,7 +22,16 @@
     <userTask id="HRM" name="人事经理" activiti:candidateGroups="HRM"></userTask>
     <exclusiveGateway id="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA"></exclusiveGateway>
     <userTask id="GM" name="总经理" activiti:candidateGroups="GM"></userTask>
-    <serviceTask id="vacation_service" name="假期处理"></serviceTask>
+    <serviceTask id="vacation_service" name="假期处理" activiti:delegateExpression="${jumpService}">
+      <extensionElements>
+        <activiti:field name="restUrl">
+          <activiti:string><![CDATA[http://stores/decreaseDay]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param">
+          <activiti:string><![CDATA[day,businessKey,action]]></activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
     <sequenceFlow id="sid-85865CEE-2892-4CA0-9C40-DF65C8078B43" sourceRef="vacation_service" targetRef="sid-FAB311F1-6183-4C4E-8291-97A364EEB8BB"></sequenceFlow>
     <exclusiveGateway id="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F"></exclusiveGateway>
     <sequenceFlow id="sid-FA40FE9B-8D06-40B2-A576-8DFEFA5E696E" sourceRef="SUP" targetRef="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F"></sequenceFlow>
@@ -56,10 +62,10 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!hrmApprove}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="less_than_2_days" name="同意 且 小于等于 2 天" sourceRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA" targetRef="vacation_service">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrmApprove&days<=2}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrmApprove && day<=2}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="more_than_2_days" name="同意 且 大于 2天" sourceRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA" targetRef="GM">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrmApprove&days>2}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrmApprove && day>2}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-FA2D7FDF-DC6E-43A9-8138-CA3B3A6D1224" name="同意" sourceRef="sid-D7108679-028A-4FAE-B031-31E144C8B5D6" targetRef="vacation_service">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${gmApprove}]]></conditionExpression>
@@ -67,11 +73,11 @@
     <sequenceFlow id="sid-F387A25E-D703-459E-894F-32F78ACC2221" name="驳回" sourceRef="sid-D7108679-028A-4FAE-B031-31E144C8B5D6" targetRef="modify">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!gmApprove}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-946C2AA4-4467-499A-8783-2C03D67D131D" name="废弃" sourceRef="sid-B7073689-A488-4231-A176-D5836AEF5C00" targetRef="sid-FAB311F1-6183-4C4E-8291-97A364EEB8BB">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action =='cancel'}]]></conditionExpression>
-    </sequenceFlow>
     <sequenceFlow id="sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C" name="提交" sourceRef="sid-B7073689-A488-4231-A176-D5836AEF5C00" targetRef="attendance_officer">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action =='submit'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-946C2AA4-4467-499A-8783-2C03D67D131D" name="废弃" sourceRef="sid-B7073689-A488-4231-A176-D5836AEF5C00" targetRef="vacation_service">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action =='cancel'}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_ask_day_off">
@@ -92,10 +98,10 @@
         <omgdc:Bounds height="28.0" width="28.0" x="975.0" y="761.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="SUP" id="BPMNShape_SUP">
-        <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="255.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="240.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="HRM" id="BPMNShape_HRM">
-        <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="480.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="495.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA" id="BPMNShape_sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA">
         <omgdc:Bounds height="40.0" width="40.0" x="525.0" y="625.0"></omgdc:Bounds>
@@ -127,8 +133,8 @@
         <omgdi:waypoint x="370.00000000000006" y="130.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F387A25E-D703-459E-894F-32F78ACC2221" id="BPMNEdge_sid-F387A25E-D703-459E-894F-32F78ACC2221">
-        <omgdi:waypoint x="680.5194805194806" y="794.4805194805194"></omgdi:waypoint>
-        <omgdi:waypoint x="682.0" y="850.0"></omgdi:waypoint>
+        <omgdi:waypoint x="680.0" y="795.0"></omgdi:waypoint>
+        <omgdi:waypoint x="680.0" y="850.0"></omgdi:waypoint>
         <omgdi:waypoint x="275.0" y="850.0"></omgdi:waypoint>
         <omgdi:waypoint x="275.0" y="465.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
@@ -138,7 +144,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-BB0B460E-41A1-4B5C-AE97-947AD15E4A90" id="BPMNEdge_sid-BB0B460E-41A1-4B5C-AE97-947AD15E4A90">
         <omgdi:waypoint x="545.0" y="170.0"></omgdi:waypoint>
-        <omgdi:waypoint x="545.0" y="255.0"></omgdi:waypoint>
+        <omgdi:waypoint x="545.0" y="240.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-87CBC7C4-68B5-4E56-947C-7ECBE1A002A8" id="BPMNEdge_sid-87CBC7C4-68B5-4E56-947C-7ECBE1A002A8">
         <omgdi:waypoint x="275.0" y="385.0"></omgdi:waypoint>
@@ -151,7 +157,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-4F498511-F427-4415-9821-031D682A4BC0" id="BPMNEdge_sid-4F498511-F427-4415-9821-031D682A4BC0">
         <omgdi:waypoint x="545.0000000000001" y="445.0"></omgdi:waypoint>
-        <omgdi:waypoint x="545.0" y="480.0"></omgdi:waypoint>
+        <omgdi:waypoint x="545.0" y="495.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-85865CEE-2892-4CA0-9C40-DF65C8078B43" id="BPMNEdge_sid-85865CEE-2892-4CA0-9C40-DF65C8078B43">
         <omgdi:waypoint x="865.0" y="775.0"></omgdi:waypoint>
@@ -171,23 +177,23 @@
         <omgdi:waypoint x="545.0" y="735.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-FA40FE9B-8D06-40B2-A576-8DFEFA5E696E" id="BPMNEdge_sid-FA40FE9B-8D06-40B2-A576-8DFEFA5E696E">
-        <omgdi:waypoint x="545.0" y="335.0"></omgdi:waypoint>
+        <omgdi:waypoint x="545.0" y="320.0"></omgdi:waypoint>
         <omgdi:waypoint x="545.0000000000001" y="405.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F671ED57-E371-4022-97AF-70E1D75F8153" id="BPMNEdge_sid-F671ED57-E371-4022-97AF-70E1D75F8153">
-        <omgdi:waypoint x="545.0" y="560.0"></omgdi:waypoint>
+        <omgdi:waypoint x="545.0" y="575.0"></omgdi:waypoint>
         <omgdi:waypoint x="545.0" y="625.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C" id="BPMNEdge_sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C">
+        <omgdi:waypoint x="275.0" y="295.0"></omgdi:waypoint>
+        <omgdi:waypoint x="275.0" y="170.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-946C2AA4-4467-499A-8783-2C03D67D131D" id="BPMNEdge_sid-946C2AA4-4467-499A-8783-2C03D67D131D">
         <omgdi:waypoint x="255.0" y="315.0"></omgdi:waypoint>
         <omgdi:waypoint x="191.0" y="315.0"></omgdi:waypoint>
         <omgdi:waypoint x="191.0" y="904.0"></omgdi:waypoint>
-        <omgdi:waypoint x="989.0" y="904.0"></omgdi:waypoint>
-        <omgdi:waypoint x="989.0" y="789.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C" id="BPMNEdge_sid-184F3DAE-AF4B-4533-8C66-F9F5B7F74D6C">
-        <omgdi:waypoint x="275.0" y="295.0"></omgdi:waypoint>
-        <omgdi:waypoint x="275.0" y="170.0"></omgdi:waypoint>
+        <omgdi:waypoint x="815.0" y="904.0"></omgdi:waypoint>
+        <omgdi:waypoint x="815.0" y="815.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-5D4E5D48-751A-46D3-8C01-9B3CAA2EB9D5" id="BPMNEdge_sid-5D4E5D48-751A-46D3-8C01-9B3CAA2EB9D5">
         <omgdi:waypoint x="525.0" y="645.0"></omgdi:waypoint>

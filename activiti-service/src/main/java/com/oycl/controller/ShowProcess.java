@@ -3,6 +3,7 @@ package com.oycl.controller;
 
 import com.oycl.service.ShowTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,10 +17,11 @@ public class ShowProcess {
     @Autowired
     ShowTaskService showTaskService;
 
-    @RequestMapping(value = "/showImg")
-    public void startJob(HttpServletResponse response, String instanceId){
+    @RequestMapping(value = "/showImg/{instanceId}")
+    public void startJob(HttpServletResponse response, @PathVariable(value = "instanceId") String instanceId){
         InputStream imageStream = null;
         try {
+            response.setHeader("Content-Type","image/svg+xml");
             imageStream = showTaskService.ShowImg(instanceId);
             if(imageStream == null){
                 throw new Exception();
@@ -32,7 +34,8 @@ public class ShowProcess {
             }
             response.getOutputStream().flush();
         }catch(Exception e) {
-
+            //TODO
+            e.printStackTrace();
         } finally { // 流关闭
             try {
                 imageStream.close();
