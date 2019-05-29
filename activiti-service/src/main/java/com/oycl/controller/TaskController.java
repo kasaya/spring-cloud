@@ -17,67 +17,77 @@ public class TaskController {
     @Autowired
     JobService jobService;
 
+    @Autowired
+    ShowTaskService showTaskService;
+
+
     /**
-     * 开启流程
-     *
+     * 任务确认
      * @param inputParam
      * @return
      */
-    @PostMapping(value = "/start", produces = MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam startProcess(@RequestBody InputParam inputParam) {
-        return jobService.startJob(inputParam);
+    @PostMapping(value = "/approve", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public OutputParam complete(@RequestBody  InputParam inputParam){
+        return jobService.complete(inputParam);
     }
 
     /**
-     * 全流程展示(最新)
-     */
-
-    @PostMapping(value = "/showProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String showProcessList() {
-        return jobService.showLatestProcessList();
-    }
-
-    /**
-     * 全流程展示(全部)
-     *
-     * @return
-     */
-    @PostMapping(value = "/showAllProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String showAllProcessList() {
-        return jobService.showAllProcessList();
-    }
-
-
-    /**
-     * 发布流程
-     *
-     * @param file
-     * @return
-     */
-    @PostMapping(value = "/deployProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam deployProcess(MultipartFile file) {
-        return jobService.deployment(file);
-    }
-
-    /**
-     * 删除流程对象
-     *
+     * 显示用户/用户组任务
      * @param inputParam
      * @return
      */
-    @PostMapping(value = "/deleteProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam deleteProcessInstance(@RequestBody InputParam inputParam) {
-        return jobService.stopProcessInstance(inputParam);
+    @PostMapping(value = "/showTask", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public String showTask(@RequestBody InputParam inputParam){
+        return jobService.showTask(inputParam.getUserId(), inputParam.getGroup());
     }
 
     /**
-     * 用户所属流程
-     *
+     * 显示任务详细
      * @param inputParam
      * @return
      */
-    @PostMapping(value = "/showUserProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String showUserProcess(@RequestBody InputParam inputParam) {
-        return jobService.showUserProcess(inputParam);
+    @PostMapping(value = "/showTaskDetail", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public OutputParam showTaskDetail(@RequestBody InputParam inputParam){
+        return jobService.showTaskDetail(inputParam.getTaskId());
+    }
+
+    /**
+     * 认领任务
+     * @param inputParam
+     * @return
+     */
+    @PostMapping(value = "/claimTask", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public OutputParam claim(@RequestBody InputParam inputParam){
+        return jobService.claim(inputParam);
+    }
+
+    /**
+     * 撤销认领
+     * @param inputParam
+     * @return
+     */
+    @PostMapping(value = "/cancelClaim", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public OutputParam cancelClaim(@RequestBody InputParam inputParam){
+        return jobService.cancelClaim(inputParam);
+    }
+
+    /**
+     * 当前流程所在节点查询
+     * @param inputParam
+     * @return
+     */
+    @PostMapping(value = "/showCurrentPoint", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public String showCurrentPoint(@RequestBody  InputParam inputParam){
+        return jobService.showCurrentPoint(inputParam);
+    }
+
+    /**
+     * 展示审批流水
+     * @param inputParam
+     * @return
+     */
+    @PostMapping(value = "/showFullHistory", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public String showFullHistory(@RequestBody InputParam inputParam){
+        return showTaskService.showFullHistory(inputParam.getProcessInstanceId());
     }
 }

@@ -8,6 +8,7 @@ import com.oycl.mainserver.input.LoginInput;
 import com.oycl.mainserver.output.LoginOutput;
 import com.oycl.service.LogicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,5 +44,15 @@ public class InterfaceController implements LogEnable {
     @PostMapping(value = "/test")
     public String test(){
         return "success";
+    }
+
+    @PostMapping(value = "/setDay", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String setDay(@RequestBody String param) {
+        return "setDay success ！param：" + param;
+    }
+
+    @PostMapping(value = "/decreaseDay", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String decreaseDay(@RequestBody String param) {
+        return "decreaseDay success！param：" +param;
     }
 }

@@ -8,7 +8,7 @@
     <serviceTask id="update_status_service" name="设置假期" activiti:delegateExpression="${jumpService}">
       <extensionElements>
         <activiti:field name="restUrl">
-          <activiti:string><![CDATA[http://stores/setDay]]></activiti:string>
+          <activiti:string><![CDATA[http://interface-service/ser/setDay]]></activiti:string>
         </activiti:field>
         <activiti:field name="param">
           <activiti:string><![CDATA[day]]></activiti:string>
@@ -25,7 +25,7 @@
     <serviceTask id="vacation_service" name="假期处理" activiti:delegateExpression="${jumpService}">
       <extensionElements>
         <activiti:field name="restUrl">
-          <activiti:string><![CDATA[http://stores/decreaseDay]]></activiti:string>
+          <activiti:string><![CDATA[http://interface-service/ser/decreaseDay]]></activiti:string>
         </activiti:field>
         <activiti:field name="param">
           <activiti:string><![CDATA[day,businessKey,action]]></activiti:string>
