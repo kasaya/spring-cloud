@@ -2,6 +2,8 @@ package com.oycl.definition;
 
 
 import com.oycl.extention.SystemPropertySourceFactory;
+import org.apache.ibatis.mapping.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;

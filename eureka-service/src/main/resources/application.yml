@@ -1,6 +1,11 @@
 spring:
   application:
     name: eureka-service
+  rabbitmq:  #mq配置
+    host: localhost
+    port: 5672
+    username: springcloud
+    password: springcloud
 server:
   port: 9090
 eureka:
@@ -14,6 +19,7 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
     register-with-eureka: false
     fetch-registry: false
+
 
 management:
   endpoint:

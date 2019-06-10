@@ -22,11 +22,9 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @EnableRedisRepositories
 public class RedisConfig {
 
-    @Autowired
-    RedisProperties redisProperties;
 
     @Bean
-    public JedisConnectionFactory jedisConnFactory(){
+    public JedisConnectionFactory jedisConnFactory(RedisProperties redisProperties){
         //配置单节点redis
         RedisStandaloneConfiguration standaloneConfig = new  RedisStandaloneConfiguration();
         standaloneConfig.setDatabase(redisProperties.getDatabase());
@@ -40,14 +38,14 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(@Autowired JedisConnectionFactory jedisConnFactory){
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnFactory){
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnFactory);
         return redisTemplate;
     }
 
     @Bean
-    public IRedisService redisService(@Autowired RedisTemplate redisTemplate) {
+    public IRedisService redisService(RedisTemplate redisTemplate) {
         IRedisService redisService = new RedisServiceImpl(redisTemplate);
         RedisUtil.setRedisService(redisService);
         return redisService;

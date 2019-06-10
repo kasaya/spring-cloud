@@ -1,12 +1,8 @@
 package com.oycl;
 
-import com.google.gson.Gson;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class test {
     public static void main(String[] args) {

@@ -21,6 +21,9 @@ spring:
            allowedMethods: ['*']
            allowedHeaders: ['*']
            allowCredentials: true
+  bus:
+    refreshGateway:
+      enabled: true
  rabbitmq:
   host: localhost
   port: 5672

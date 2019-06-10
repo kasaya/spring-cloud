@@ -1,6 +1,5 @@
-package com.oycl.config;
+package com.oycl.dynamicroutes;
 
-import com.oycl.dynamicroutes.DynamicRouteBusEndpoint;
 import org.springframework.cloud.bus.BusProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
