@@ -1,7 +1,6 @@
 package com.oycl.compment.db;
 
 
-import com.oycl.compment.log.LogEnable;
 import org.apache.ibatis.annotations.*;
 
 /**
@@ -12,7 +11,7 @@ import org.apache.ibatis.annotations.*;
  * @author cango
  * @since 2019-01-15
  */
-public interface BaseMapper<T, K> extends LogEnable {
+public interface BaseMapper<T, K>  {
 
     @Lang(BaseMapperDriver.class)
     @Insert({"<script>", "INSERT INTO ${table} ${values}", "</script>"})

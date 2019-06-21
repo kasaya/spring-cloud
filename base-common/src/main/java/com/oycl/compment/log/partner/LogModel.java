@@ -1,8 +1,8 @@
-package com.oycl.compment.log;
+package com.oycl.compment.log.partner;
 
-
-import java.util.Date;
-
+/**
+ * 自定义log内容
+ */
 public class LogModel {
     /** 模块*/
     private String module;
@@ -14,7 +14,7 @@ public class LogModel {
     private String optContent;
     /** 备注 */
     private String desc;
-    /**状态 */
+    /** 状态 */
     private String status;
 
     public String getModule() {

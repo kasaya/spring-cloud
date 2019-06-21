@@ -15,8 +15,7 @@
         <groupId>com.oycl</groupId>
         <artifactId>server-base</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <!--<relativePath/> -->
-        <relativePath>../server-base/pom.xml</relativePath>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <dependencies>
@@ -41,8 +40,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-
-
 
     </dependencies>
 

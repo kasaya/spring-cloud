@@ -24,7 +24,6 @@ management:
     web:
       exposure:
         include: ['*'] #开启所有端点 httptrace <-路由追踪
-      base-path: /
     enabled-by-default: true
 
 server:

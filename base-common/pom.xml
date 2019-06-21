@@ -12,11 +12,13 @@
     <name>base_common</name>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.1.RELEASE</version>
-        <relativePath />
+        <groupId>com.oycl</groupId>
+        <artifactId>server-base</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <!--<relativePath/> -->
+        <relativePath>../server-base/pom.xml</relativePath>
     </parent>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,20 +45,8 @@
             <version>0.9.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.1.5.RELEASE</version>
-        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

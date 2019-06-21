@@ -1,44 +1,47 @@
-package com.oycl.compment.log;
+package com.oycl.compment.log.process;
 
-import com.google.gson.Gson;
+
+import com.oycl.compment.log.manager.DefaultLogManager;
+import com.oycl.compment.log.partner.ILogManager;
+import com.oycl.compment.log.partner.LogModel;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+
+import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * conrtoller, service, api  切面log 实现
+ */
 @Aspect
 public class LogProcess {
 
-    @Autowired
-    Gson gson;
 
     @Autowired
     private ILogManager logManager;
 
 
-    @Pointcut("execution(* com.oycl..*Controller.*(..)) " +
-            "|| execution(* com.oycl..*Service.*(..)) " +
-            "|| execution(* com.oycl..*Api.*(..)) " +
-            "|| execution(* *.*Exception*(..))")
+    @Pointcut("@within(com.oycl.compment.log.annotation.CustomLog)")
     public void wlogPoint(){}
 
     @Around("wlogPoint()")
     public Object aroundwLogPoint(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        //是否可以用
+        //取得类
         Class target= joinPoint.getSignature().getDeclaringType();
 
-        if(!LogEnable.class.isAssignableFrom(target) && !LogEnable.class.isInstance(target)){
-            return joinPoint.proceed();
-        }
         //取得调用的方法
         Method method = getInvokedMethod(joinPoint);
         if(Objects.isNull(method)){
@@ -67,14 +70,8 @@ public class LogProcess {
      * @return
      */
     private Method getInvokedMethod(JoinPoint joinPoint){
-      Class[] cLasses = Arrays.stream(joinPoint.getArgs()).map(obj->obj.getClass()).collect(Collectors.toList()).toArray(new Class[0]);
-      String methodName = joinPoint.getSignature().getName();
-      Method method = null;
-        try {
-            method = joinPoint.getSignature().getDeclaringType().getMethod(methodName, cLasses);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        MethodInvocationProceedingJoinPoint mjoinPoint = (MethodInvocationProceedingJoinPoint)joinPoint;
+        Method method = ((MethodSignature)mjoinPoint.getSignature()).getMethod();
         return method;
     }
 
@@ -85,7 +82,15 @@ public class LogProcess {
      */
     private String getParam(JoinPoint joinPoint){
         //","串联所有参数（json体）
-        return Arrays.stream(joinPoint.getArgs()).map(obj->gson.toJson(obj)).collect(Collectors.joining(","));
+        return Arrays.stream(joinPoint.getArgs()).map(obj-> {
+            if(obj instanceof HttpServletResponse){
+                return "HttpServletResponse";
+            }else if(obj instanceof HttpServletRequest){
+                return "HttpServletRequest";
+            }
+            //需要自己重写toString方法。不过如果需要的情况下，建议自己重写toString方法
+            return obj.toString();
+        }).collect(Collectors.joining(","));
     }
 
     /**

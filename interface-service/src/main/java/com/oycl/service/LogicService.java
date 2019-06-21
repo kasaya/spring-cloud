@@ -1,7 +1,6 @@
 package com.oycl.service;
 
 
-import com.oycl.compment.log.LogEnable;
 import com.oycl.interfaceserver.input.GetMcodeInput;
 import com.oycl.interfaceserver.output.GetMcodeOutPut;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author cango
  */
 
-public interface LogicService extends LogEnable {
+public interface LogicService  {
     GetMcodeOutPut getMcode(@RequestBody GetMcodeInput input);
 }

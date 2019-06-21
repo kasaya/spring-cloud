@@ -40,6 +40,6 @@ public class LoginController {
 
     @PostMapping(value = "/test")
     public String test(){
-        return  "success";
+        return  value;
     }
 }

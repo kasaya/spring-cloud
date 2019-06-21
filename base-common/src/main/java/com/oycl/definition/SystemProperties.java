@@ -5,9 +5,11 @@ import com.oycl.extention.SystemPropertySourceFactory;
 import org.apache.ibatis.mapping.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+@RefreshScope
 @Component
 @PropertySource(name="systemConfig", value = {"classpath:/systemConfig-${spring.profiles.active}.properties"}, factory = SystemPropertySourceFactory.class)
 public class SystemProperties {
