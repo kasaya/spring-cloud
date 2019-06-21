@@ -33,7 +33,7 @@ public class AuthorizationController {
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public LoginOutput register(@RequestBody @Validated LoginInput input, BindingResult bindingResult) throws Exception {
         paramaterVidation(bindingResult);
-        LoginOutput result = authroizationService.register(input);
+        LoginOutput result = authroizationService.login(input);
         setSuccess(result);
         return result;
     }
