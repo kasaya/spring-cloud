@@ -36,9 +36,10 @@ eureka:
       defaultZone: ${eureka.url}
   instance:
     #健康检查页面
-    health-check-url-path: /status
+    health-check-url-path: /actuator/health
       #状态页面
-    status-page-url-path: /health
+    status-page-url-path: /actuator/status
+
 ---
 #本地环境启用native环境，扫描本地文件
 spring:

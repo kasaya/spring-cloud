@@ -1,21 +1,30 @@
+server:
+  port: 9090
 spring:
   application:
     name: eureka-service
-server:
-  port: 9090
 eureka:
   instance:
     hostname: localhost
     metadata-map:
       username: kasaya
       password: kasaya
+    #表示eureka client发送心跳给server端的频率
+    lease-renewal-interval-in-seconds: 10
+    #踢掉没有心跳的机器时间
+    lease-expiration-duration-in-seconds: 8
   client:
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
     register-with-eureka: false
     fetch-registry: false
-
-
+  server:
+    #关闭安全模式
+    enable-self-preservation: false
+    #主动失效检测间隔为6s（单位毫秒，默认是60*1000）
+    eviction-interval-timer-in-ms: 6000
+    #eureka server刷新readCacheMap的时间
+    response-cache-update-interval-ms: 3000
 management:
   endpoint:
     env:
@@ -24,6 +33,7 @@ management:
     web:
       exposure:
         include: env
+
 ---
 spring:
   profiles: prod1
