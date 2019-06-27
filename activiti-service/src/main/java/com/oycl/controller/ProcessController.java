@@ -1,6 +1,7 @@
 package com.oycl.controller;
 
 
+import com.google.gson.JsonObject;
 import com.oycl.entity.InputParam;
 import com.oycl.entity.OutputParam;
 import com.oycl.service.JobService;
@@ -23,7 +24,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping(value = "/start", produces = MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam startProcess(@RequestBody InputParam inputParam) {
+    public JsonObject startProcess(@RequestBody InputParam inputParam) throws Exception {
         return jobService.startJob(inputParam);
     }
 
@@ -32,7 +33,7 @@ public class ProcessController {
      */
 
     @PostMapping(value = "/showProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String showProcessList() {
+    public Object showProcessList() throws Exception {
         return jobService.showLatestProcessList();
     }
 
@@ -42,7 +43,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping(value = "/showAllProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String showAllProcessList() {
+    public Object showAllProcessList() throws Exception  {
         return jobService.showAllProcessList();
     }
 
@@ -54,7 +55,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping(value = "/deployProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam deployProcess(MultipartFile file) {
+    public Object deployProcess(MultipartFile[] file) throws Exception {
         return jobService.deployment(file);
     }
 
@@ -65,8 +66,8 @@ public class ProcessController {
      * @return
      */
     @PostMapping(value = "/deleteProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam deleteProcessInstance(@RequestBody InputParam inputParam) {
-        return jobService.stopProcessInstance(inputParam);
+    public boolean deleteProcessInstance(@RequestBody InputParam inputParam) throws Exception {
+        return jobService.deleteProcessInstance(inputParam);
     }
 
     /**
@@ -76,7 +77,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping(value = "/showUserProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String showUserProcess(@RequestBody InputParam inputParam) {
+    public Object showUserProcess(@RequestBody InputParam inputParam) throws Exception {
         return jobService.showUserProcess(inputParam);
     }
 

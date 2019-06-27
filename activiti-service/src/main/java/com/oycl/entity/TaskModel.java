@@ -15,14 +15,15 @@ public class TaskModel {
     private String taskId;
     private String taskName;
     private Date createTime;
+    private Date claimTime;
     private String assignee;
     private String instanceId;
     private String processDefinitionName;
-    private Map<String,Object> comments;
+    private String owner;
+    private List<Object> comments;
 
     /**用户参数*/
     private Map<String, Object> params;
-
 
 
 }

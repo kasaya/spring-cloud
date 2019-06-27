@@ -1,9 +1,24 @@
 package com.oycl;
 
+import com.google.gson.Gson;
+
 import java.util.*;
 
 public class Test {
     public static void main(String[] args) {
+        Map<String, Object> vars = new HashMap<>();
+        List<String> leaderList = new ArrayList<>();
+        leaderList.add("zhangsan");
+        leaderList.add("lisi");
+        leaderList.add("wangwu");
+
+        vars.put("leaderList", leaderList);
+
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(vars));
+
+    }
+    public static void main2(String[] args) {
         int[] nums1 = new int[]{1,2,2,1};
          int[]nums2 =new int[]{2,2};
         int[] result  = intersect(nums1, nums2);

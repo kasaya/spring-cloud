@@ -6,11 +6,10 @@ import com.oycl.entity.InputParam;
 import com.oycl.entity.OutputParam;
 import com.oycl.entity.ProcessModel;
 import com.oycl.entity.TaskModel;
+import com.oycl.exception.ActivityException;
+import com.oycl.exception.BaseException;
 import com.oycl.service.JobService;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricActivityInstanceQuery;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -18,6 +17,7 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -65,7 +65,6 @@ public class JobServiceImpl implements JobService {
     private HistoryService historyService;
 
 
-
     /**
      * 开启任务
      *
@@ -73,48 +72,53 @@ public class JobServiceImpl implements JobService {
      * @return
      */
     @Override
-    public OutputParam startJob(InputParam inputParam) {
-        OutputParam output = new OutputParam();
+    @Transactional(rollbackFor = Exception.class)
+    public JsonObject startJob(InputParam inputParam) throws Exception {
 
-        if (StringUtils.isEmpty(inputParam.getProcessDefinitionKey())) {
-            output.setResult("fail");
-            output.setMessage("must required job id ");
-            return output;
+        if (StringUtils.isEmpty(inputParam.getProcessDefinitionId()) && StringUtils.isEmpty(inputParam.getProcessDefinitionKey())) {
+            throw new ActivityException("");
         }
+
         logger.info("开启流程..." + inputParam.getProcessDefinitionKey());
 
-        String json = inputParam.getJsonParam();
+        String json = inputParam.getGlobalParam();
         Map<String, Object> map = gson.fromJson(json, Map.class);
         map.put("applyUserId", inputParam.getUserId());
         Authentication.setAuthenticatedUserId(inputParam.getUserId());
 
         ProcessInstance instance = null;
-        //使用流程定义的DefinitionId启动流程实例,安装定义id中的版本号启动任务
-        if(StringUtils.isNotEmpty(inputParam.getProcessDefinitionId())){
-            instance = runtimeService.startProcessInstanceById(inputParam.getProcessDefinitionId()
-                    , inputParam.getBusinessKey()
-                    , map);
-            //使用流程定义的key启动流程实例，使用key值启动，默认是按照最新版本的流程定义启动
-        }else if(StringUtils.isNotEmpty(inputParam.getProcessDefinitionKey())){
-            instance = runtimeService.startProcessInstanceByKey(inputParam.getProcessDefinitionKey()
-                    , inputParam.getBusinessKey()
-                    , map);
+        try {
+            //使用流程定义的DefinitionId启动流程实例,安装定义id中的版本号启动任务
+            if (StringUtils.isNotEmpty(inputParam.getProcessDefinitionId())) {
+                instance = runtimeService.startProcessInstanceById(inputParam.getProcessDefinitionId()
+                        , inputParam.getBusinessKey()
+                        , map);
+                //使用流程定义的key启动流程实例，使用key值启动，默认是按照最新版本的流程定义启动
+            } else if (StringUtils.isNotEmpty(inputParam.getProcessDefinitionKey())) {
+                instance = runtimeService.startProcessInstanceByKey(inputParam.getProcessDefinitionKey()
+                        , inputParam.getBusinessKey()
+                        , map);
+            }
+        } catch (ActivitiObjectNotFoundException e) {
+            //流程定义不存在
+            throw new ActivityException("");
         }
+
         // 获取流程启动产生的taskId
         Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
+
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("taskId", task.getId());
         jsonObject.addProperty("processInstanceId", task.getProcessInstanceId());
-
-        output.setResultStrObj(gson.toJson(jsonObject));
 
 
         logger.info("启动流程实例成功:{}", instance);
         logger.info("流程实例ID:{}", instance.getId());
         logger.info("流程定义ID:{}", instance.getProcessInstanceId());
 
-        return output;
+
+        return jsonObject;
     }
 
     /**
@@ -124,29 +128,36 @@ public class JobServiceImpl implements JobService {
      * @return
      */
     @Override
-    public String showTask(String userId, String group) {
+    public  List<TaskModel> showTask(String userId, String group)throws Exception {
+
+
+        if (StringUtils.isEmpty(userId) && StringUtils.isEmpty(group)) {
+            throw new ActivityException("");
+        }
         TaskQuery taskQuery = null;
         if (userId != null) {
-            taskQuery = taskService.createTaskQuery().taskAssignee(userId);
+            //取得经办人是自己的任务,或者是被委派的任务
+            taskQuery = taskService.createTaskQuery().taskAssignee(userId).or().taskDelegationState(DelegationState.PENDING).taskAssignee(userId).endOr();
         }
 
         if (group != null) {
             taskQuery = taskService.createTaskQuery().taskCandidateGroup(group).includeProcessVariables();
         }
         List<Task> list = taskQuery.list();
+
+
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }
         List<TaskModel> resultList = new ArrayList<>();
 
         list.forEach(item -> {
-            //取得流程变量
-            // Map<String, Object> map =  runtimeService.getVariables(item.getExecutionId());
             TaskModel entity = new TaskModel();
             entity.setAssignee(item.getAssignee());
             entity.setCreateTime(item.getCreateTime());
             entity.setTaskId(item.getId());
-
+            entity.setOwner(item.getOwner());
+            entity.setClaimTime(item.getClaimTime());
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(item.getProcessInstanceId()).singleResult();
             if (processInstance != null) {
                 entity.setProcessDefinitionName(processInstance.getProcessDefinitionName());
@@ -157,7 +168,7 @@ public class JobServiceImpl implements JobService {
             resultList.add(entity);
         });
 
-        return gson.toJson(resultList);
+        return resultList;
     }
 
     /**
@@ -167,16 +178,12 @@ public class JobServiceImpl implements JobService {
      * @return
      */
     @Override
-    public OutputParam showTaskDetail(String taskId) {
-        OutputParam output = new OutputParam();
+    public TaskModel showTaskDetail(String taskId) throws Exception {
         Task task = taskService.createTaskQuery().taskId(taskId).includeProcessVariables().singleResult();
         if (task == null) {
-            output.setResult("fail");
-            output.setMessage("must required task id ");
-            logger.info("审核任务ID:{}查询到任务为空！", taskId);
-            return output;
+            throw new ActivityException("");
         }
-
+        //取得任务历史
         List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery()
                 .processInstanceId(task.getProcessInstanceId())
                 .orderByHistoricTaskInstanceStartTime()
@@ -185,7 +192,9 @@ public class JobServiceImpl implements JobService {
         TaskModel entity = new TaskModel();
         entity.setCreateTime(task.getCreateTime());
         entity.setTaskId(task.getId());
-
+        entity.setAssignee(task.getAssignee());
+        entity.setOwner(task.getOwner());
+        entity.setClaimTime(task.getClaimTime());
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
         if (processInstance != null) {
             entity.setProcessDefinitionName(processInstance.getProcessDefinitionName());
@@ -193,15 +202,15 @@ public class JobServiceImpl implements JobService {
         entity.setTaskName(task.getName());
         entity.setParams(task.getProcessVariables());
         entity.setInstanceId(task.getProcessInstanceId());
-        Map<String, Object> comments = new HashMap<>();
-        historicTaskInstances.forEach(item->{
-            if(item.getEndTime()!= null){
-                comments.put(item.getAssignee(), taskService.getTaskComments(item.getId()).stream().map(comment->comment.getFullMessage()).collect(Collectors.toList()));
+        List<Object> comments = new ArrayList<>();
+        //取得审批内容
+        historicTaskInstances.forEach(item -> {
+            if (item.getEndTime() != null) {
+                comments.add(taskService.getTaskComments(item.getId()));
             }
         });
         entity.setComments(comments);
-        output.setResultStrObj(gson.toJson(entity));
-        return output;
+        return entity;
     }
 
     /**
@@ -211,46 +220,40 @@ public class JobServiceImpl implements JobService {
      * @return
      */
     @Override
-    public OutputParam claim(InputParam inputParam) {
-        OutputParam output = new OutputParam();
+    @Transactional(rollbackFor = Exception.class)
+    public boolean claim(InputParam inputParam) throws Exception {
         Task task = taskService.createTaskQuery().taskId(inputParam.getTaskId()).singleResult();
         if (task == null) {
-            output.setResult("fail");
-            output.setMessage("must required task id ");
-            logger.info("审核任务ID:{}查询到任务为空！", inputParam.getTaskId());
-            return output;
+            throw new ActivityException("");
         }
         taskService.claim(inputParam.getTaskId(), inputParam.getUserId());
-        return output;
+        return true;
     }
 
     @Override
-    public OutputParam cancelClaim(InputParam inputParam) {
-        OutputParam output = new OutputParam();
+    @Transactional
+    public boolean cancelClaim(InputParam inputParam) throws Exception{
         Task task = taskService.createTaskQuery().taskId(inputParam.getTaskId()).singleResult();
         if (task == null) {
-            output.setResult("fail");
-            output.setMessage("must required task id ");
-            logger.info("审核任务ID:{}查询到任务为空！", inputParam.getTaskId());
-            return output;
+            throw new ActivityException("");
         }
         taskService.unclaim(inputParam.getTaskId());
-        return output;
+        return true;
     }
 
     @Override
-    public String showLatestProcessList() {
+    public List<ProcessModel> showLatestProcessList() {
         List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().active().latestVersion().list();
-        return gson.toJson(setProcessMode(list));
+        return setProcessMode(list);
     }
 
     @Override
-    public String showAllProcessList() {
+    public List<ProcessModel> showAllProcessList() {
         List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().active().list();
-        return gson.toJson(setProcessMode(list));
+        return setProcessMode(list);
     }
 
-    private List<ProcessModel> setProcessMode(List<ProcessDefinition> list){
+    private List<ProcessModel> setProcessMode(List<ProcessDefinition> list) {
         List<ProcessModel> models = new ArrayList<>();
         list.forEach(item -> {
             ProcessModel model = new ProcessModel();
@@ -271,78 +274,69 @@ public class JobServiceImpl implements JobService {
      * @return
      */
     @Override
-    public OutputParam complete(InputParam inputParam) {
-        OutputParam output = new OutputParam();
+    @Transactional(rollbackFor = Exception.class)
+    public boolean complete(InputParam inputParam) throws Exception {
         Task task = taskService.createTaskQuery().taskId(inputParam.getTaskId()).singleResult();
         if (task == null) {
-            output.setResult("fail");
-            output.setMessage("must required task id ");
-            logger.info("审核任务ID:{}查询到任务为空！", inputParam.getTaskId());
-            return output;
+            throw new ActivityException("");
         }
 
         //设置局部动作变量
-        String actionJson = inputParam.getActionParam();
-        if (actionJson != null && !actionJson.equals("")) {
-            Map<String, Object> map = gson.fromJson(actionJson, Map.class);
+        if (inputParam.getLocalParam() != null && !inputParam.getLocalParam().equals("")) {
+            Map<String, Object> map = gson.fromJson(inputParam.getLocalParam(), Map.class);
             taskService.setVariablesLocal(task.getId(), map);
         }
 
         //修改全局变量
-        if (inputParam.getJsonParam() != null && !inputParam.getJsonParam().equals("")) {
-            Map<String, Object> map = gson.fromJson(inputParam.getJsonParam(), Map.class);
+        if (inputParam.getGlobalParam() != null && !inputParam.getGlobalParam().equals("")) {
+            Map<String, Object> map = gson.fromJson(inputParam.getGlobalParam(), Map.class);
             taskService.setVariables(inputParam.getTaskId(), map);
         }
 
-        // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
-        ///批注人的名称  一定要写，不然查看的时候不知道人物信息
-
         // 添加批注信息
         //comment为批注内容
-        if (StringUtils.isNoneEmpty(inputParam.getComment())) {
-            Authentication.setAuthenticatedUserId(inputParam.getUserId());
-            taskService.addComment(task.getId(), null, inputParam.getComment());
+        synchronized (this) {
+            if (StringUtils.isNotEmpty(inputParam.getComment())) {
+                // 由于流程用户上下文对象是线程独立的，所以要在需要的位置设置，要保证设置和获取操作在同一个线程中
+                ///批注人的名称  一定要写，不然查看的时候不知道人物信息
+                Authentication.setAuthenticatedUserId(inputParam.getUserId());
+                taskService.addComment(task.getId(), null, inputParam.getComment());
+            }
         }
 
-        taskService.complete(inputParam.getTaskId());
+        if(StringUtils.isNotEmpty(task.getOwner()) && !task.getOwner().equals(inputParam.getUserId())){
+            taskService.resolveTask(inputParam.getTaskId());
+        }else{
+            taskService.complete(inputParam.getTaskId());
+        }
 
-        return output;
+        return true;
     }
 
 
     /**
-     * 部署新流程
+     * TODO 部署新流程
      *
-     * @param file
+     * @param files
      */
     @Override
-    @Transactional
-    public OutputParam deployment(MultipartFile file) {
-        OutputParam output = new OutputParam();
-        ZipInputStream inputStream = null;
-        try {
-            if (!StringUtils.endsWith(file.getOriginalFilename(), ".xml")) {
-                output.setResult("fail");
-                output.setMessage("zip file is illegal ");
-                logger.info("部署流程:{}文件不合法！", file.getOriginalFilename());
-                return output;
-            }
-            repositoryService.createDeployment().addInputStream(file.getOriginalFilename(), file.getInputStream()).deploy();
-        } catch (IOException e) {
-            output.setResult("fail");
-            output.setMessage(e.getMessage());
-            e.printStackTrace();
-
-        } finally {
-            if (inputStream != null) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deployment(MultipartFile[] files) throws Exception {
+        if(files == null || files.length <= 0){
+            throw new ActivityException("");
+        }else{
+            for(MultipartFile file: files){
+                if (!StringUtils.endsWith(file.getOriginalFilename(), "xml")) {
+                    throw new ActivityException("");
+                }
                 try {
-                    inputStream.close();
+                    repositoryService.createDeployment().addInputStream(file.getOriginalFilename(), file.getInputStream()).deploy();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new BaseException("");
                 }
             }
         }
-        return output;
+        return true;
     }
 
     /**
@@ -350,7 +344,8 @@ public class JobServiceImpl implements JobService {
      *
      * @param inputParam
      */
-    public void deleteProcess(InputParam inputParam) {
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteProcess(InputParam inputParam) throws Exception{
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(inputParam.getProcessDefinitionKey()).singleResult();
         repositoryService.deleteDeployment(definition.getDeploymentId());
         //级联删除
@@ -363,14 +358,13 @@ public class JobServiceImpl implements JobService {
      * @param inputParam
      */
     @Override
-    public OutputParam stopProcessInstance(InputParam inputParam) {
-        OutputParam output = new OutputParam();
-        if(0 == runtimeService.createProcessInstanceQuery().processInstanceId(inputParam.getProcessInstanceId()).count()){
-            output.setResult("fail");
-            output.setMessage("ProcessInstance is not exist ");
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteProcessInstance(InputParam inputParam) throws Exception{
+        if (0 == runtimeService.createProcessInstanceQuery().processInstanceId(inputParam.getProcessInstanceId()).count()) {
+            throw new ActivityException("");
         }
-        runtimeService.deleteProcessInstance(inputParam.getProcessInstanceId(),inputParam.getComment());
-        return output;
+        runtimeService.deleteProcessInstance(inputParam.getProcessInstanceId(), inputParam.getComment());
+        return true;
     }
 
     /**
@@ -380,7 +374,7 @@ public class JobServiceImpl implements JobService {
      * @return
      */
     @Override
-    public String showUserProcess(InputParam inputParam) {
+    public List<ProcessModel> showUserProcess(InputParam inputParam) {
         List<ProcessModel> models = new ArrayList<>();
         List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().involvedUser(inputParam.getUserId()).list();
         list.forEach(process -> {
@@ -389,14 +383,14 @@ public class JobServiceImpl implements JobService {
             model.setDescription(process.getDescription());
             model.setStartTime(process.getStartTime());
             model.setEndTime(process.getEndTime());
-            model.setStatus(process.getEndTime() != null ? "已完成" : "审批中");
+            model.setStatus(process.getEndTime() != null ? "finish" : "approving");
             model.setActiveName(getCurrentActivePoint(process.getId()));
             model.setVersion(process.getProcessDefinitionVersion());
             model.setProcessInstanceId(process.getId());
             models.add(model);
         });
 
-        return gson.toJson(models);
+        return models;
     }
 
     @Override
@@ -419,6 +413,43 @@ public class JobServiceImpl implements JobService {
 
     }
 
+    /**
+     * 任务委派
+     * @param inputParam
+     */
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean delegateTask(InputParam inputParam) throws Exception{
+        //取得当前需要委派的任务
+
+        Task task = taskService.createTaskQuery().taskId(inputParam.getTaskId()).taskAssignee(inputParam.getUserId()).singleResult();
+
+        if (task == null) {
+            throw new ActivityException("001");
+        }
+        //委派任务
+        taskService.delegateTask(task.getId(), inputParam.getTargetUserId());
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean turnTask(InputParam inputParam) throws Exception{
+        //取得当前需要转派的任务
+
+        Task task = taskService.createTaskQuery().taskId(inputParam.getTaskId()).taskAssignee(inputParam.getUserId()).singleResult();
+
+        if (task == null) {
+            throw new ActivityException("001");
+        }
+        //设置转派的人
+        taskService.setAssignee(inputParam.getTaskId(), inputParam.getTargetUserId());
+        return true ;
+    }
+
+
+
     private String getCurrentActivePoint(String processInstanceId) {
 
         HistoricActivityInstanceQuery historyInstanceQuery = historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).activityType("userTask");
@@ -437,7 +468,6 @@ public class JobServiceImpl implements JobService {
         return hsInstance.getActivityName();
 
     }
-
 
 
 

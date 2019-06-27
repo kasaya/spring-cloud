@@ -20,8 +20,11 @@ public class InputParam {
     private String processDefinitionId;
     private String processInstanceId;
 
-    private String jsonParam;
-    private String actionParam;
+    private String globalParam;
+    private String localParam;
+
+    /**被委派人*/
+    private String targetUserId;
 
 
 }

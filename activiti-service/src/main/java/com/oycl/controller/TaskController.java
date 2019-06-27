@@ -27,7 +27,7 @@ public class TaskController {
      * @return
      */
     @PostMapping(value = "/approve", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam complete(@RequestBody  InputParam inputParam){
+    public Object complete(@RequestBody  InputParam inputParam)throws Exception{
         return jobService.complete(inputParam);
     }
 
@@ -37,7 +37,7 @@ public class TaskController {
      * @return
      */
     @PostMapping(value = "/showTask", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public String showTask(@RequestBody InputParam inputParam){
+    public Object showTask(@RequestBody InputParam inputParam) throws Exception{
         return jobService.showTask(inputParam.getUserId(), inputParam.getGroup());
     }
 
@@ -47,7 +47,7 @@ public class TaskController {
      * @return
      */
     @PostMapping(value = "/showTaskDetail", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam showTaskDetail(@RequestBody InputParam inputParam){
+    public Object showTaskDetail(@RequestBody InputParam inputParam) throws Exception {
         return jobService.showTaskDetail(inputParam.getTaskId());
     }
 
@@ -57,7 +57,7 @@ public class TaskController {
      * @return
      */
     @PostMapping(value = "/claimTask", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam claim(@RequestBody InputParam inputParam){
+    public boolean claim(@RequestBody InputParam inputParam)throws Exception{
         return jobService.claim(inputParam);
     }
 
@@ -67,7 +67,7 @@ public class TaskController {
      * @return
      */
     @PostMapping(value = "/cancelClaim", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public OutputParam cancelClaim(@RequestBody InputParam inputParam){
+    public boolean cancelClaim(@RequestBody InputParam inputParam) throws Exception{
         return jobService.cancelClaim(inputParam);
     }
 
@@ -77,7 +77,7 @@ public class TaskController {
      * @return
      */
     @PostMapping(value = "/showCurrentPoint", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public String showCurrentPoint(@RequestBody  InputParam inputParam){
+    public Object showCurrentPoint(@RequestBody  InputParam inputParam) throws Exception{
         return jobService.showCurrentPoint(inputParam);
     }
 
