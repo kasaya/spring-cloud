@@ -25,6 +25,9 @@ management:
       exposure:
         include: ['*'] #开启所有端点 httptrace <-路由追踪
     enabled-by-default: true
+  server:
+    servlet:
+      context-path: /
 
 server:
   port: 9093
@@ -36,9 +39,9 @@ eureka:
       defaultZone: ${eureka.url}
   instance:
     #健康检查页面
-    health-check-url-path: /actuator/health
+    health-check-url-path: ${management.server.servlet.context-path}/actuator/health
       #状态页面
-    status-page-url-path: /actuator/status
+    status-page-url-path: ${management.server.servlet.context-path}/actuator/status
 
 ---
 #本地环境启用native环境，扫描本地文件

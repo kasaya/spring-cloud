@@ -18,6 +18,10 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     #服务刷新时间配置，每隔这个时间会主动心跳一次
     lease-renewal-interval-in-seconds: 10
+    #健康检查页面
+    health-check-url-path: /actuator/health
+      #状态页面
+    status-page-url-path:  /actuator/status
 ---
 #本地环境
 spring:
@@ -26,14 +30,15 @@ spring:
     config:
       discovery:
         enabled: true
-        service-id: config-server
+        #service-id: config-server
+        service-id: cango-config
       profile: local
       label: master #默认master
       username: kasaya
       password: kasaya
       #uri: http://localhost:9093 <--单机配置，高可用需要通过负载均衡。
 eureka:
-  url: http://localhost:9090/eureka/
+  url: http://localhost:9092/eureka/,http://localhost:9093/eureka/ #默认连接第一台，如果第一台down掉,才会去连接第二台，但是高可用其实是通过eureka互相注册来实现的
 ---
 #开发环境
 spring:

@@ -16,7 +16,9 @@ eureka:
   client:
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      # 注册到eureka
     register-with-eureka: false
+    # 像注册中性获取注册信息
     fetch-registry: false
   server:
     #关闭安全模式
@@ -46,9 +48,9 @@ eureka:
     hostname: prod1
   client:
     register-with-eureka: true
-    fetch-registry: true
+    fetch-registry: false
     service-url:
-      defaultZone: http://prod2:9092/eureka/
+      defaultZone: http://localhost:9092/eureka/
 ---
 spring:
   profiles: prod2
@@ -61,6 +63,6 @@ eureka:
     hostname: prod2
   client:
     register-with-eureka: true
-    fetch-registry: true
+    fetch-registry: false
     service-url:
-      defaultZone: http://prod1:9090/eureka/
+      defaultZone: http://localhost:9093/eureka/
