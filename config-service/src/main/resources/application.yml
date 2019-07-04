@@ -37,6 +37,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${eureka.url}
+      #获取eureka 注册列表时间
+    registry-fetch-interval-seconds: 10
+      #上报给eureka时间
+    instance-info-replication-interval-seconds: 10
   instance:
     #健康检查页面
     health-check-url-path: ${management.server.servlet.context-path}/actuator/health

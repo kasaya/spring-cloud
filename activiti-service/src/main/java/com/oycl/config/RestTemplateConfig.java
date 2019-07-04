@@ -30,7 +30,7 @@ public class RestTemplateConfig {
     }
 
     @Bean
-    @LoadBalanced
+    @LoadBalanced // RestTemplate 的行为变化
     public RestTemplate restTemplate(ClientHttpRequestFactory clientHttpRequestFactory) {
         RestTemplate restTemplate = new RestTemplate();
         // 添加转换器

@@ -1,7 +1,10 @@
 package com.oycl.service;
 
 
+import com.oycl.entity.ProcessHistoryModel;
+
 import java.io.InputStream;
+import java.util.List;
 
 public interface ShowTaskService {
     /**
@@ -16,6 +19,6 @@ public interface ShowTaskService {
      * @param instanceId
      * @return
      */
-    String showFullHistory(String instanceId);
+    List<ProcessHistoryModel> showFullHistory(String instanceId);
 
 }

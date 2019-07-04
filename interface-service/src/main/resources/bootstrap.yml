@@ -38,7 +38,7 @@ spring:
       password: kasaya
       #uri: http://localhost:9093 <--单机配置，高可用需要通过负载均衡。
 eureka:
-  url: http://localhost:9092/eureka/,http://localhost:9093/eureka/ #默认连接第一台，如果第一台down掉,才会去连接第二台，但是高可用其实是通过eureka互相注册来实现的
+  url: http://localhost:9090/eureka/
 ---
 #开发环境
 spring:
@@ -55,4 +55,4 @@ spring:
       #uri: http://localhost:9093 <--单机配置，高可用需要通过负载均衡。
 #eureka 注册中心配置
 eureka:
-  url: http://localhost:9090/eureka/
+  url: http://localhost:9092/eureka/,http://localhost:9093/eureka/  #默认连接第一台，如果第一台down掉,才会去连接第二台，但是高可用其实是通过eureka互相注册来实现的

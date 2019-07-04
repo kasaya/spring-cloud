@@ -3,6 +3,7 @@ package com.oycl.controller;
 import com.oycl.compment.log.annotation.CustomLog;
 import com.oycl.interfaceserver.input.GetMcodeInput;
 import com.oycl.interfaceserver.output.GetMcodeOutPut;
+import com.oycl.mainserver.input.LoginInput;
 import com.oycl.service.LogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -33,9 +34,11 @@ public class InterfaceController  {
          return output.getResultMessage();
     }*/
 
-    @PostMapping(value = "/test")
-    public String test(){
-        return "success";
+    @PostMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
+    public LoginInput test(){
+        LoginInput input = new LoginInput();
+        input.setLoginCd("success");
+        return input;
     }
 
     @PostMapping(value = "/setDay", produces = MediaType.APPLICATION_JSON_VALUE)

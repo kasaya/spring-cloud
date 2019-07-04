@@ -19,7 +19,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<activiti-dependencies.version>7.0.0.SR1</activiti-dependencies.version>
+		<flowable.version>6.4.1</flowable.version>
 	</properties>
 
 	<dependencies>
@@ -46,16 +46,10 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
-		<!--activiti-->
 		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-spring-boot-starter</artifactId>
-		</dependency>
-
-		<!-- Activiti生成流程图 -->
-		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-image-generator</artifactId>
+			<groupId>org.flowable</groupId>
+			<artifactId>flowable-spring-boot-starter</artifactId>
+			<version>${flowable.version}</version>
 		</dependency>
 
 		<dependency>
@@ -75,26 +69,7 @@
 			<type>pom</type>
 		</dependency>
 
-
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.activiti.dependencies</groupId>
-				<artifactId>activiti-dependencies</artifactId>
-				<version>${activiti-dependencies.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<plugins>
@@ -105,15 +80,5 @@
 		</plugins>
 	</build>
 
-	<repositories>
-		<repository>
-			<id>alfresco</id>
-			<name>Activiti Releases</name>
-			<url>https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-	</repositories>
 
 </project>

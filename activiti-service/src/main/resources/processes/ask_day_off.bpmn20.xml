@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
-  <process id="ask_day_off" name="请假" isExecutable="true" activiti:initiator="applyUserId">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="ask_day_off" name="请假" isExecutable="true" flowable:initiator="applyUserId">
     <documentation>请假流程</documentation>
     <startEvent id="startEvent1"></startEvent>
-    <userTask id="attendance_officer" name="考勤专员" activiti:candidateGroups="AO"></userTask>
+    <userTask id="attendance_officer" name="考勤专员" flowable:candidateGroups="AO"></userTask>
     <sequenceFlow id="sid-4D43C47D-97E7-45F4-9907-103B08FF5158" sourceRef="startEvent1" targetRef="attendance_officer"></sequenceFlow>
-    <serviceTask id="update_status_service" name="设置假期" activiti:delegateExpression="${jumpService}">
+    <serviceTask id="update_status_service" name="设置假期" flowable:delegateExpression="${jumpService}">
       <extensionElements>
-        <activiti:field name="restUrl">
-          <activiti:string><![CDATA[http://interface-service/ser/setDay]]></activiti:string>
-        </activiti:field>
-        <activiti:field name="param">
-          <activiti:string><![CDATA[day]]></activiti:string>
-        </activiti:field>
+        <flowable:field name="restUrl">
+          <flowable:string><![CDATA[http://stores/setDay]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="param">
+          <flowable:string><![CDATA[day]]></flowable:string>
+        </flowable:field>
       </extensionElements>
     </serviceTask>
     <exclusiveGateway id="is_approve"></exclusiveGateway>
     <endEvent id="sid-FAB311F1-6183-4C4E-8291-97A364EEB8BB"></endEvent>
-    <userTask id="SUP" name="主管" activiti:candidateGroups="SUP"></userTask>
+    <userTask id="SUP" name="主管" flowable:candidateGroups="SUP"></userTask>
     <sequenceFlow id="sid-BB0B460E-41A1-4B5C-AE97-947AD15E4A90" sourceRef="update_status_service" targetRef="SUP"></sequenceFlow>
-    <userTask id="HRM" name="人事经理" activiti:candidateGroups="HRM"></userTask>
+    <userTask id="HRM" name="人事经理" flowable:candidateGroups="HRM"></userTask>
     <exclusiveGateway id="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA"></exclusiveGateway>
-    <userTask id="GM" name="总经理" activiti:candidateGroups="GM"></userTask>
-    <serviceTask id="vacation_service" name="假期处理" activiti:delegateExpression="${jumpService}">
+    <userTask id="GM" name="总经理" flowable:candidateGroups="GM"></userTask>
+    <serviceTask id="vacation_service" name="假期处理" flowable:delegateExpression="${jumpService}">
       <extensionElements>
-        <activiti:field name="restUrl">
-          <activiti:string><![CDATA[http://interface-service/ser/decreaseDay]]></activiti:string>
-        </activiti:field>
-        <activiti:field name="param">
-          <activiti:string><![CDATA[day,businessKey,action]]></activiti:string>
-        </activiti:field>
+        <flowable:field name="restUrl">
+          <flowable:string><![CDATA[http://stores/decreaseDay]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="param">
+          <flowable:string><![CDATA[day,businessKey,action]]></flowable:string>
+        </flowable:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="sid-85865CEE-2892-4CA0-9C40-DF65C8078B43" sourceRef="vacation_service" targetRef="sid-FAB311F1-6183-4C4E-8291-97A364EEB8BB"></sequenceFlow>
     <exclusiveGateway id="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F"></exclusiveGateway>
     <sequenceFlow id="sid-FA40FE9B-8D06-40B2-A576-8DFEFA5E696E" sourceRef="SUP" targetRef="sid-265B7817-E25F-4C5B-B426-ABEFB716A05F"></sequenceFlow>
     <sequenceFlow id="sid-F671ED57-E371-4022-97AF-70E1D75F8153" sourceRef="HRM" targetRef="sid-61E21700-B0C2-40D3-8106-826EAE9C7DAA"></sequenceFlow>
-    <userTask id="modify" name="修改" activiti:assignee="${applyUserId}">
+    <userTask id="modify" name="修改" flowable:assignee="${applyUserId}">
       <extensionElements>
-        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
     </userTask>
     <exclusiveGateway id="sid-D7108679-028A-4FAE-B031-31E144C8B5D6"></exclusiveGateway>

@@ -9,19 +9,22 @@ import com.oycl.entity.TaskModel;
 import com.oycl.exception.ActivityException;
 import com.oycl.exception.BaseException;
 import com.oycl.service.JobService;
-import org.activiti.engine.*;
-import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricActivityInstanceQuery;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.DelegationState;
-import org.activiti.engine.task.Task;
-import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.lang3.StringUtils;
 
+import org.flowable.common.engine.impl.identity.Authentication;
+import org.flowable.engine.HistoryService;
+import org.flowable.engine.RepositoryService;
+import org.flowable.engine.RuntimeService;
+import org.flowable.engine.TaskService;
+import org.flowable.engine.history.HistoricActivityInstance;
+import org.flowable.engine.history.HistoricActivityInstanceQuery;
+import org.flowable.engine.history.HistoricProcessInstance;
+import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.task.api.DelegationState;
+import org.flowable.task.api.Task;
+import org.flowable.task.api.TaskQuery;
+import org.flowable.task.api.history.HistoricTaskInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +102,7 @@ public class JobServiceImpl implements JobService {
                         , inputParam.getBusinessKey()
                         , map);
             }
-        } catch (ActivitiObjectNotFoundException e) {
+        } catch (Exception e) {
             //流程定义不存在
             throw new ActivityException("");
         }

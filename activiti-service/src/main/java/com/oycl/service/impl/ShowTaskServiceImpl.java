@@ -1,20 +1,27 @@
 package com.oycl.service.impl;
 
 import com.google.gson.Gson;
+
 import com.oycl.entity.ProcessHistoryModel;
 import com.oycl.service.ShowTaskService;
 import com.oycl.util.ActivitiUtils;
-import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.history.*;
-import org.activiti.engine.impl.RepositoryServiceImpl;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.image.ProcessDiagramGenerator;
 import org.apache.commons.lang3.StringUtils;
 
+
+import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.engine.HistoryService;
+import org.flowable.engine.ProcessEngine;
+import org.flowable.engine.ProcessEngineConfiguration;
+import org.flowable.engine.RepositoryService;
+import org.flowable.engine.history.HistoricActivityInstance;
+import org.flowable.engine.history.HistoricActivityInstanceQuery;
+import org.flowable.engine.history.HistoricProcessInstance;
+import org.flowable.engine.impl.RepositoryServiceImpl;
+import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.flowable.identitylink.api.history.HistoricIdentityLink;
+import org.flowable.image.ProcessDiagramGenerator;
+import org.flowable.image.impl.DefaultProcessDiagramGenerator;
+import org.flowable.task.api.history.HistoricTaskInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,54 +29,38 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ShowTaskServiceImpl implements ShowTaskService {
 
-    /**
-     * 流程运行时相关的服务
-     */
-    @Autowired
-    private RuntimeService runtimeService;
-
-    /**
-     * 历史记录相关服务接口
-     */
+    /** 历史记录相关服务接口 */
     @Autowired
     private HistoryService historyService;
 
-    /**
-     * 流程定义和部署相关的存储服务
-     */
+    /** 流程定义和部署相关的存储服务 */
     @Autowired
     private RepositoryService repositoryService;
 
     @Autowired
-    private Gson gson;
+    private ProcessEngineConfiguration processEngineConfiguration ;
 
-    /**
-     * 节点任务相关操作接口
-     */
-    @Autowired
-    private TaskService taskService;
 
-    /**
-     * 流程图生成器
-     */
-    @Autowired
-    private ProcessDiagramGenerator processDiagramGenerator;
+    /** 流程图生成器 */
+    private ProcessDiagramGenerator processDiagramGenerator = new DefaultProcessDiagramGenerator();
 
     private static final Logger logger = LoggerFactory.getLogger(ShowTaskServiceImpl.class);
 
     @Override
-    public InputStream ShowImg(String instanceId) {
+    public InputStream ShowImg(String instanceId){
 
         InputStream imageStream = null;
 
         logger.info("查看完整流程图！流程实例ID:{}", instanceId);
-        if (StringUtils.isBlank(instanceId)) {
+        if(StringUtils.isBlank(instanceId)){
             return null;
         }
 
@@ -78,7 +69,7 @@ public class ShowTaskServiceImpl implements ShowTaskService {
          */
         HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
                 .processInstanceId(instanceId).singleResult();
-        if (processInstance == null) {
+        if(processInstance == null) {
             logger.error("流程实例ID:{}没查询到流程实例！", instanceId);
             return null;
         }
@@ -87,16 +78,15 @@ public class ShowTaskServiceImpl implements ShowTaskService {
         BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
 
         /*
-         *  查看已执行的节点集合
+		 *  查看已执行的节点集合
 		 *  获取流程历史中已执行节点，并按照节点在流程中执行先后顺序排序
 		 */
         // 构造历史流程查询
         HistoricActivityInstanceQuery historyInstanceQuery = historyService.createHistoricActivityInstanceQuery().processInstanceId(instanceId);
-        // 查询历史节点
         List<HistoricActivityInstance> historicActivityInstanceList = historyInstanceQuery.orderByHistoricActivityInstanceStartTime().asc().list();
-        if (historicActivityInstanceList == null || historicActivityInstanceList.size() == 0) {
+        if(historicActivityInstanceList == null || historicActivityInstanceList.size() == 0) {
             logger.info("流程实例ID:{}没有历史节点信息！", instanceId);
-            imageStream = processDiagramGenerator.generateDiagram(bpmnModel, null, null, "宋体", "微软雅黑", "黑体", true, "png");
+            imageStream = processDiagramGenerator.generateDiagram(bpmnModel, null, null, "宋体", "微软雅黑", processEngineConfiguration.getClassLoader(), 1.0, false);
             return imageStream;
         }
 
@@ -104,22 +94,22 @@ public class ShowTaskServiceImpl implements ShowTaskService {
         List<String> executedActivityIdList = historicActivityInstanceList.stream().map(item -> item.getActivityId()).collect(Collectors.toList());
 
         /*
-         *  获取流程走过的线
+		 *  获取流程走过的线
 		 */
         // 获取流程定义
         ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService).getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
         List<String> flowIds = ActivitiUtils.getHighLightedFlows(bpmnModel, processDefinition, historicActivityInstanceList);
 
-        imageStream = processDiagramGenerator.generateDiagram(bpmnModel, executedActivityIdList, flowIds, "宋体", "微软雅黑", "黑体", true, "png");
+        imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png",executedActivityIdList, flowIds, "宋体", "微软雅黑", "黑体", processEngineConfiguration.getClassLoader(),1.0, false);
 
         return imageStream;
     }
 
     @Override
-    public String showFullHistory(String instanceId) {
+    public List<ProcessHistoryModel> showFullHistory(String instanceId) {
 
         logger.info("查看完整流程图！流程实例ID:{}", instanceId);
-        if (StringUtils.isBlank(instanceId)) {
+        if(StringUtils.isBlank(instanceId)){
             return null;
         }
 
@@ -128,7 +118,7 @@ public class ShowTaskServiceImpl implements ShowTaskService {
          */
         HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
                 .processInstanceId(instanceId).singleResult();
-        if (processInstance == null) {
+        if(processInstance == null) {
             logger.error("流程实例ID:{}没查询到流程实例！", instanceId);
             return null;
         }
@@ -137,27 +127,27 @@ public class ShowTaskServiceImpl implements ShowTaskService {
         HistoricActivityInstanceQuery historyInstanceQuery = historyService.createHistoricActivityInstanceQuery().processInstanceId(instanceId);
         // 查询历史节点
         List<HistoricActivityInstance> historicActivityInstanceList = historyInstanceQuery.orderByHistoricActivityInstanceStartTime().asc().list();
-        List<ProcessHistoryModel> models = new ArrayList<>();
-        if (historicActivityInstanceList.size() > 0) {
-            historicActivityInstanceList.forEach(instance -> {
-                if (instance.getTaskId() != null) {
+        List<ProcessHistoryModel>  models = new ArrayList<>();
+        if(historicActivityInstanceList.size() > 0){
+            historicActivityInstanceList.forEach(instance->{
+                if(instance.getTaskId() != null){
 
-                    HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery().taskId(instance.getTaskId()).includeTaskLocalVariables().singleResult();
+                    HistoricTaskInstance task =  historyService.createHistoricTaskInstanceQuery().taskId(instance.getTaskId()).includeTaskLocalVariables().singleResult();
                     ProcessHistoryModel model = new ProcessHistoryModel();
                     model.setAssignee(instance.getAssignee());
                     model.setStartTime(instance.getStartTime());
                     model.setEndTime(instance.getEndTime());
-                    model.setStatus(instance.getEndTime() != null ? "已完成" : "审批中");
+                    model.setStatus(instance.getEndTime()!=null?"已完成":"审批中");
                     model.setActiveName(instance.getActivityName());
                     model.setProcessInstanceId(instance.getId());
                     List<HistoricIdentityLink> list = historyService.getHistoricIdentityLinksForTask(task.getId());
-                    for (HistoricIdentityLink item : list) {
-                        if (item.getType().equals("candidate")) {
+                    for(HistoricIdentityLink item : list){
+                        if(item.getType().equals("candidate")){
                             model.setGroup(item.getGroupId());
                             break;
                         }
                     }
-                    if (task != null) {
+                    if(task != null){
                         model.setParams(task.getTaskLocalVariables());
                     }
                     model.setDeleteReason(instance.getDeleteReason());
@@ -167,7 +157,7 @@ public class ShowTaskServiceImpl implements ShowTaskService {
 
             });
         }
-        return gson.toJson(models);
+        return models;
     }
 
 
