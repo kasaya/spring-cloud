@@ -30,8 +30,7 @@ spring:
     config:
       discovery:
         enabled: true
-        #service-id: config-server
-        service-id: cango-config
+        service-id: config-server
       profile: local
       label: master #默认master
       username: kasaya

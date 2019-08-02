@@ -38,7 +38,7 @@ public class FileRouteDefinitionRepository implements RouteDefinitionRepository 
     @Autowired
     private Gson gson;
 
-    private static final Logger logger = LoggerFactory.getLogger(FileRouteDefinitionRepository.class);
+    private static final Logger logger  = LoggerFactory.getLogger(FileRouteDefinitionRepository.class);
 
     @Override
     public Flux<RouteDefinition> getRouteDefinitions() {

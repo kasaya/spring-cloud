@@ -124,11 +124,11 @@ public class JwtGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtGat
 
                 //TODO: 验证token 有效性
 
-                Flux<DataBuffer> message = Flux.just(dataBufferFactory.wrap((new String("{'a':'b'}").getBytes())));
+                /*Flux<DataBuffer> message = Flux.just(dataBufferFactory.wrap((new String("{'a':'b'}").getBytes())));
                 response.writeWith(message);
                 response.getHeaders().add("Context-type","application/json;charset=utf-8");
                 response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                return response.setComplete();
+                return response.setComplete();*/
 
 
 

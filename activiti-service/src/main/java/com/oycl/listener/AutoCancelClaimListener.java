@@ -1,10 +1,11 @@
 package com.oycl.listener;
 
-import org.activiti.engine.ManagementService;
-import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.delegate.DelegateTask;
-import org.activiti.engine.delegate.TaskListener;
+
+import org.flowable.engine.ManagementService;
+import org.flowable.engine.ProcessEngineConfiguration;
+import org.flowable.engine.TaskService;
+import org.flowable.engine.delegate.TaskListener;
+import org.flowable.task.service.delegate.DelegateTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
