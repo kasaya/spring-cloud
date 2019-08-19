@@ -2,7 +2,7 @@ package com.oycl.controller;
 
 
 import com.oycl.entity.InputParam;
-import com.oycl.entity.OutputParam;
+import com.oycl.entity.model.ProcessHistoryModel;
 import com.oycl.service.JobService;
 import com.oycl.service.ShowTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 public class TaskController {
@@ -32,13 +34,23 @@ public class TaskController {
     }
 
     /**
-     * 显示用户/用户组任务
+     * 显示用户组任务
      * @param inputParam
      * @return
      */
-    @PostMapping(value = "/showTask", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public Object showTask(@RequestBody InputParam inputParam) throws Exception{
-        return jobService.showTask(inputParam.getUserId(), inputParam.getGroup());
+    @PostMapping(value = "/showGroupTask", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public Object showGroupTask(@RequestBody InputParam inputParam) throws Exception{
+        return jobService.showGroupTask(inputParam);
+    }
+
+    /**
+     * 显示用户任务
+     * @param inputParam
+     * @return
+     */
+    @PostMapping(value = "/showUserTask", produces =  MediaType.APPLICATION_JSON_VALUE)
+    public Object showUserTask(@RequestBody InputParam inputParam) throws Exception{
+        return jobService.showUserTask(inputParam);
     }
 
     /**
@@ -87,7 +99,7 @@ public class TaskController {
      * @return
      */
     @PostMapping(value = "/showFullHistory", produces =  MediaType.APPLICATION_JSON_VALUE)
-    public String showFullHistory(@RequestBody InputParam inputParam){
+    public List<ProcessHistoryModel> showFullHistory(@RequestBody InputParam inputParam){
         return showTaskService.showFullHistory(inputParam.getProcessInstanceId());
     }
 }

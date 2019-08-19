@@ -21,8 +21,9 @@ public class ShowProcess {
     public void startJob(HttpServletResponse response, @PathVariable(value = "instanceId") String instanceId){
         InputStream imageStream = null;
         try {
-            response.setHeader("Content-Type","image/svg+xml");
+            response.setHeader("Content-Type","image/png");
             imageStream = showTaskService.ShowImg(instanceId);
+            //System.out.println(IOUtils.toString(imageStream, "UTF-8"));
             if(imageStream == null){
                 throw new Exception();
             }
@@ -32,6 +33,7 @@ public class ShowProcess {
             while ((len = imageStream.read(b, 0, 1024)) != -1) {
                 response.getOutputStream().write(b, 0, len);
             }
+
             response.getOutputStream().flush();
         }catch(Exception e) {
             //TODO

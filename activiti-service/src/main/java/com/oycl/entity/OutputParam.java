@@ -7,10 +7,10 @@ import lombok.Setter;
 @Getter
 public class OutputParam {
 
-    private String result;
+    private boolean result;
     private String message;
     /**返回参数*/
-    private String resultStrObj;
+    private Object resultObj;
 
 
 }

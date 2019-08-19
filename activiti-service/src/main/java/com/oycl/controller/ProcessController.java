@@ -24,7 +24,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping(value = "/start", produces = MediaType.APPLICATION_JSON_VALUE)
-    public JsonObject startProcess(@RequestBody InputParam inputParam) throws Exception {
+    public OutputParam startProcess(@RequestBody InputParam inputParam) throws Exception {
         return jobService.startJob(inputParam);
     }
 
@@ -66,7 +66,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping(value = "/deleteProcess", produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean deleteProcessInstance(@RequestBody InputParam inputParam) throws Exception {
+    public OutputParam deleteProcessInstance(@RequestBody InputParam inputParam) throws Exception {
         return jobService.deleteProcessInstance(inputParam);
     }
 

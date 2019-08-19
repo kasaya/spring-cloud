@@ -26,14 +26,6 @@ public class JumpService implements JavaDelegate {
     private Expression restUrl;
     private Expression param;
 
-    public void setRestUrl(Expression restUrl) {
-        this.restUrl = restUrl;
-    }
-    public void setParam(Expression param) {
-        this.param = param;
-    }
-
-
     @Override
     public void execute(DelegateExecution delegateExecution) {
 

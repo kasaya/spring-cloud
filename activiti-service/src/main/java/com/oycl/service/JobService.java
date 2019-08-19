@@ -1,11 +1,10 @@
 package com.oycl.service;
 
 
-import com.google.gson.JsonObject;
 import com.oycl.entity.InputParam;
 import com.oycl.entity.OutputParam;
-import com.oycl.entity.ProcessModel;
-import com.oycl.entity.TaskModel;
+import com.oycl.entity.model.ProcessModel;
+import com.oycl.entity.model.TaskModel;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,15 +16,21 @@ public interface JobService {
      * @param inputParam
      * @return
      */
-    JsonObject startJob(InputParam inputParam) throws Exception;
+    OutputParam startJob(InputParam inputParam) throws Exception;
 
     /**
-     * 显示用户/用户组任务
-     * @param user
-     * @param group
+     * 显示用户组任务
+     * @param inputParam
      * @return
      */
-    List<TaskModel> showTask(String user, String group) throws Exception;
+    List<TaskModel> showGroupTask(InputParam inputParam);
+
+    /**
+     * 显示用户任务
+     * @param inputParam
+     * @return
+     */
+    List<TaskModel> showUserTask(InputParam inputParam);
 
     /**
      * 显示任务详细
@@ -39,7 +44,7 @@ public interface JobService {
      * @param inputParam
      * @return
      */
-    boolean complete(InputParam inputParam) throws Exception;
+    OutputParam complete(InputParam inputParam) throws Exception;
 
     /**
      * 认领任务
@@ -93,7 +98,7 @@ public interface JobService {
      * @param inputParam
      * @return
      */
-    boolean deleteProcessInstance(InputParam inputParam) throws Exception;
+    OutputParam deleteProcessInstance(InputParam inputParam) throws Exception;
 
 
     /**

@@ -1,16 +1,13 @@
 package com.oycl.service.impl;
 
-import com.google.gson.Gson;
 
-import com.oycl.entity.ProcessHistoryModel;
+import com.oycl.definition.Constants;
+import com.oycl.entity.model.ProcessHistoryModel;
 import com.oycl.service.ShowTaskService;
 import com.oycl.util.ActivitiUtils;
 import org.apache.commons.lang3.StringUtils;
-
-
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.HistoryService;
-import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.history.HistoricActivityInstance;
@@ -29,9 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,7 +81,7 @@ public class ShowTaskServiceImpl implements ShowTaskService {
         List<HistoricActivityInstance> historicActivityInstanceList = historyInstanceQuery.orderByHistoricActivityInstanceStartTime().asc().list();
         if(historicActivityInstanceList == null || historicActivityInstanceList.size() == 0) {
             logger.info("流程实例ID:{}没有历史节点信息！", instanceId);
-            imageStream = processDiagramGenerator.generateDiagram(bpmnModel, null, null, "宋体", "微软雅黑", processEngineConfiguration.getClassLoader(), 1.0, false);
+            imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", "宋体", "黑体", "宋体", processEngineConfiguration.getClassLoader(), 1.0, true);
             return imageStream;
         }
 
@@ -100,7 +95,7 @@ public class ShowTaskServiceImpl implements ShowTaskService {
         ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService).getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
         List<String> flowIds = ActivitiUtils.getHighLightedFlows(bpmnModel, processDefinition, historicActivityInstanceList);
 
-        imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png",executedActivityIdList, flowIds, "宋体", "微软雅黑", "黑体", processEngineConfiguration.getClassLoader(),1.0, false);
+        imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png",executedActivityIdList, flowIds, "宋体", "黑体", "宋体", processEngineConfiguration.getClassLoader(),3.0, true);
 
         return imageStream;
     }
@@ -137,7 +132,7 @@ public class ShowTaskServiceImpl implements ShowTaskService {
                     model.setAssignee(instance.getAssignee());
                     model.setStartTime(instance.getStartTime());
                     model.setEndTime(instance.getEndTime());
-                    model.setStatus(instance.getEndTime()!=null?"已完成":"审批中");
+                    model.setStatus(instance.getEndTime() != null ? Constants.status.finish.getcode() : Constants.status.approving.getcode());
                     model.setActiveName(instance.getActivityName());
                     model.setProcessInstanceId(instance.getId());
                     List<HistoricIdentityLink> list = historyService.getHistoricIdentityLinksForTask(task.getId());
