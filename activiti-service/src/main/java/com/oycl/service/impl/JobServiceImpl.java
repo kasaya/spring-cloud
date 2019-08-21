@@ -5,20 +5,15 @@ import com.google.gson.JsonObject;
 import com.oycl.definition.Constants;
 import com.oycl.entity.InputParam;
 import com.oycl.entity.OutputParam;
-import com.oycl.entity.model.GroupsModel;
 import com.oycl.entity.model.ProcessModel;
 import com.oycl.entity.model.SearchParamModel;
 import com.oycl.entity.model.TaskModel;
-import com.oycl.exception.BusinessException;
 import com.oycl.exception.BaseException;
+import com.oycl.exception.BusinessException;
 import com.oycl.service.JobService;
 import org.apache.commons.lang3.StringUtils;
-
 import org.flowable.common.engine.impl.identity.Authentication;
-import org.flowable.engine.HistoryService;
-import org.flowable.engine.RepositoryService;
-import org.flowable.engine.RuntimeService;
-import org.flowable.engine.TaskService;
+import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricActivityInstanceQuery;
 import org.flowable.engine.history.HistoricProcessInstance;
@@ -39,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -64,6 +58,9 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private IdentityService identityService;
 
 
     /**
@@ -91,10 +88,10 @@ public class JobServiceImpl implements JobService {
         }
         //设置初期化用户
         map.put("initUserId", inputParam.getUserId());
-        Authentication.setAuthenticatedUserId(inputParam.getUserId());
 
         ProcessInstance instance = null;
         try {
+            identityService.setAuthenticatedUserId(inputParam.getUserId());
             //使用流程定义的DefinitionId启动流程实例,安装定义id中的版本号启动任务
             if (StringUtils.isNotEmpty(inputParam.getProcessDefinitionId())) {
                 instance = runtimeService.startProcessInstanceById(inputParam.getProcessDefinitionId()
@@ -109,14 +106,15 @@ public class JobServiceImpl implements JobService {
         } catch (Exception e) {
             //流程定义不存在
             throw new BusinessException("流程定义不存在");
+        }finally {
+            identityService.setAuthenticatedUserId(null);
         }
 
         // 获取流程启动产生的taskId
         Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
-
-
+        taskService.complete(task.getId());
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("taskId", task.getId());
+
         jsonObject.addProperty("processInstanceId", task.getProcessInstanceId());
 
 
