@@ -1,9 +1,10 @@
 #基本配置
+
 server:
   port: 8095
 spring:
   profiles:
-    active: @profiles.active@
+    active: local
   application:
       name: activiti-service
   main:
